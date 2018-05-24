@@ -10,6 +10,15 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.6.1"
+}
+
+// playstoreDebug, playstoreRelease, freeDebug, freeRelease
+sonarqube {
+    androidVariant 'freeRelease'
+}
+
 apply plugin: 'com.android.application'
 
 repositories {
