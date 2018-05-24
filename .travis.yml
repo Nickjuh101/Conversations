@@ -11,12 +11,11 @@ android:
     - '.+'
 addons:
   sonarcloud:
-    organization: "mmalemi-github" # the key of the org you chose at step #3
+    organization: "mmalemi-github"
     token:
       secure: "CoiiyUjA46ha3T7PO1/9GLv/xMqN0Vy2J9+zN0fddwI4fy7dHooweFOQTFTuo9ub5zd02oOhmURptSwKA10KWtnxsHva1XkD7k99yVoL53VfygEdsdn4DvejgAu4gkm0E6/02DaV1WMJDeTpdsguJhr02YcHkDvvPcmNdnCmdsNElyLYeWn6bcWAb6Lzv4OTyFh/lXiZ1to3K1Lo8EJ+Dx3Dj6YaGjnbvofZplVwc9E3AoURzILCZ4R4c8vsH4l+YzuvI2EBRW2N6eZH+DkEfYgmLwGu8O84oWZUrZIeWUk0R5qptqq6u6S2kz/G5EPEtCypzGSTmbDimWigUsWMB9TDQ4HCLRg33nLDoG5i8uDAZuOcXJ17VpFG1QJpaoLCZf1F8Qsi0frxUGp3gjfm8cmoQNxVeDKmIUKoasHTYp1m0oP0RzPn6hxz56I+Q3/9HuwUnu4e6Rmf8hblPobwONx6eurEVPDfYSTguF2tgHuOppR6oVVMoa7EeST9Km2qNut0JfKHHAVO5ZL1GQOubYuJcJHqEdgedVOGx0gt2IpD5dpsw7ytyATyF5a2JscIhCmVa5CBmUS2TU271PN0rSI/zwKoHFHJEfFWXH9BiRmSy7HpVyGprzFnNALbCb8c3dhrKKmKqAebFd19cx04PXXwI2g74nsqF1ZwYtLzNZg=" # encrypted value of your token
 script:
     - ./gradlew assembleFreeRelease
-    - sonar-scanner
-
+    
 before_install:
     - yes | sdkmanager "platforms;android-27"
