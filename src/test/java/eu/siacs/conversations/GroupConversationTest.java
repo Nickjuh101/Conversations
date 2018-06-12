@@ -4,7 +4,6 @@ import static eu.siacs.conversations.entities.Conversational.MODE_MULTI;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -40,11 +39,10 @@ public class GroupConversationTest {
         Conversation conversation = mXmppConnectionService.findOrCreateConversation(
                 null,
                 null,
-                true,
+                true, // Multi Conversation
                 true);
         when(conversation.getMode()).thenReturn(MODE_MULTI);
         assertEquals(MODE_MULTI, conversation.getMode());
     }
-
 
 }

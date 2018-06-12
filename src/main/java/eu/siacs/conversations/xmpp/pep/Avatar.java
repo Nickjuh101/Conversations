@@ -6,7 +6,7 @@ import eu.siacs.conversations.xml.Element;
 import rocks.xmpp.addr.Jid;
 
 public class Avatar {
-
+	public final int MAX_AVATAR_SIZE = 2000000;
 	public enum Origin { PEP, VCARD };
 
 	public String type;
@@ -24,6 +24,10 @@ public class Avatar {
 
 	public String getFilename() {
 		return sha1sum;
+	}
+
+	public int getMaxAvatarSize() {
+		return MAX_AVATAR_SIZE;
 	}
 
 	public static Avatar parseMetadata(Element items) {
