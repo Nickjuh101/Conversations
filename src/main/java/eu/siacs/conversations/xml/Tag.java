@@ -15,7 +15,7 @@ public class Tag {
 
 	protected int type;
 	protected String name;
-	protected Hashtable<String, String> attributes = new Hashtable<String, String>();
+	protected Hashtable<String, String> attributes = new Hashtable<>();
 
 	protected Tag(int type, String name) {
 		this.type = type;
@@ -81,9 +81,7 @@ public class Tag {
 		tagOutput.append(name);
 		if (type != END) {
 			Set<Entry<String, String>> attributeSet = attributes.entrySet();
-			Iterator<Entry<String, String>> it = attributeSet.iterator();
-			while (it.hasNext()) {
-				Entry<String, String> entry = it.next();
+			for (Entry<String, String> entry : attributeSet) {
 				tagOutput.append(' ');
 				tagOutput.append(entry.getKey());
 				tagOutput.append("=\"");

@@ -859,13 +859,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 	public void sort() {
 		synchronized (this.messages) {
 			Collections.sort(this.messages, (left, right) -> {
-				if (left.getTimeSent() < right.getTimeSent()) {
-					return -1;
-				} else if (left.getTimeSent() > right.getTimeSent()) {
-					return 1;
-				} else {
-					return 0;
-				}
+                return Long.compare(left.getTimeSent(), right.getTimeSent());
 			});
 			untieMessages();
 		}

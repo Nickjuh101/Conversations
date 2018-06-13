@@ -76,12 +76,16 @@ public final class CameraManager {
 
         camera = Camera.open(cameraId);
 
-        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
-            camera.setDisplayOrientation((720 - displayOrientation - cameraInfo.orientation) % 360);
-        else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK)
-            camera.setDisplayOrientation((720 - displayOrientation + cameraInfo.orientation) % 360);
-        else
-            throw new IllegalStateException("facing: " + cameraInfo.facing);
+        switch (cameraInfo.facing) {
+            case CameraInfo.CAMERA_FACING_FRONT:
+                camera.setDisplayOrientation((720 - displayOrientation - cameraInfo.orientation) % 360);
+                break;
+            case CameraInfo.CAMERA_FACING_BACK:
+                camera.setDisplayOrientation((720 - displayOrientation + cameraInfo.orientation) % 360);
+                break;
+            default:
+                throw new IllegalStateException("facing: " + cameraInfo.facing);
+        }
 
         camera.setPreviewTexture(textureView.getSurfaceTexture());
 
@@ -178,19 +182,16 @@ public final class CameraManager {
         }
     }
 
-    private static final Comparator<Camera.Size> numPixelComparator = new Comparator<Camera.Size>() {
-        @Override
-        public int compare(final Camera.Size size1, final Camera.Size size2) {
-            final int pixels1 = size1.height * size1.width;
-            final int pixels2 = size2.height * size2.width;
+    private static final Comparator<Camera.Size> numPixelComparator = (size1, size2) -> {
+        final int pixels1 = size1.height * size1.width;
+        final int pixels2 = size2.height * size2.width;
 
-            if (pixels1 < pixels2)
-                return 1;
-            else if (pixels1 > pixels2)
-                return -1;
-            else
-                return 0;
-        }
+        if (pixels1 < pixels2)
+            return 1;
+        else if (pixels1 > pixels2)
+            return -1;
+        else
+            return 0;
     };
 
     private static Camera.Size findBestPreviewSizeValue(final Camera.Parameters parameters, int width, int height) {
@@ -207,7 +208,7 @@ public final class CameraManager {
             return parameters.getPreviewSize();
 
         // sort by size, descending
-        final List<Camera.Size> supportedPreviewSizes = new ArrayList<Camera.Size>(rawSupportedSizes);
+        final List<Camera.Size> supportedPreviewSizes = new ArrayList<>(rawSupportedSizes);
         Collections.sort(supportedPreviewSizes, numPixelComparator);
 
         Camera.Size bestSize = null;

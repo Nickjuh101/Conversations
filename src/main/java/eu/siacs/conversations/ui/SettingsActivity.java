@@ -288,15 +288,15 @@ public class SettingsActivity extends XmppActivity implements
 			File dir = new File(getFilesDir().getAbsolutePath(), "/Pictures/");
 			File[] array = dir.listFiles();
 			if (array != null) {
-				for (int b = 0; b < array.length; b++) {
-					String name = array[b].getName().toLowerCase();
-					if (name.equals(".nomedia")) {
-						continue;
-					}
-					if (array[b].isFile()) {
-						array[b].delete();
-					}
-				}
+                for (File anArray : array) {
+                    String name = anArray.getName().toLowerCase();
+                    if (name.equals(".nomedia")) {
+                        continue;
+                    }
+                    if (anArray.isFile()) {
+                        anArray.delete();
+                    }
+                }
 			}
 		} catch (Throwable e) {
 			Log.e("CleanCache", e.toString());
@@ -308,15 +308,15 @@ public class SettingsActivity extends XmppActivity implements
 			File dir = new File(getFilesDir().getAbsolutePath(), "/Files/");
 			File[] array = dir.listFiles();
 			if (array != null) {
-				for (int b = 0; b < array.length; b++) {
-					String name = array[b].getName().toLowerCase();
-					if (name.equals(".nomedia")) {
-						continue;
-					}
-					if (array[b].isFile()) {
-						array[b].delete();
-					}
-				}
+                for (File anArray : array) {
+                    String name = anArray.getName().toLowerCase();
+                    if (name.equals(".nomedia")) {
+                        continue;
+                    }
+                    if (anArray.isFile()) {
+                        anArray.delete();
+                    }
+                }
 			}
 		} catch (Throwable e) {
 			Log.e("CleanCache", e.toString());

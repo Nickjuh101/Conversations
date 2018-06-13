@@ -714,47 +714,49 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 		boolean darkBackground = type == RECEIVED && (!isInValidSession || mUseGreenBackground) || activity.isDarkTheme();
 
-		if (type == DATE_SEPARATOR) {
-			if (UIHelper.today(message.getTimeSent())) {
-				viewHolder.status_message.setText(R.string.today);
-			} else if (UIHelper.yesterday(message.getTimeSent())) {
-				viewHolder.status_message.setText(R.string.yesterday);
-			} else {
-				viewHolder.status_message.setText(DateUtils.formatDateTime(activity, message.getTimeSent(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
-			}
-			viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.date_bubble_grey : R.drawable.date_bubble_white);
-			return view;
-		} else if (type == STATUS) {
-			if ("LOAD_MORE".equals(message.getBody())) {
-				viewHolder.status_message.setVisibility(View.GONE);
-				viewHolder.contact_picture.setVisibility(View.GONE);
-				viewHolder.load_more_messages.setVisibility(View.VISIBLE);
-				viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages((Conversation) message.getConversation()));
-			} else {
-				viewHolder.status_message.setVisibility(View.VISIBLE);
-				viewHolder.load_more_messages.setVisibility(View.GONE);
-				viewHolder.status_message.setText(message.getBody());
-				boolean showAvatar;
-				if (conversation.getMode() == Conversation.MODE_SINGLE) {
-					showAvatar = true;
-					loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
-				} else if (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0)) {
-					showAvatar = true;
-					loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
-				} else {
-					showAvatar = false;
-				}
-				if (showAvatar) {
-					viewHolder.contact_picture.setAlpha(0.5f);
-					viewHolder.contact_picture.setVisibility(View.VISIBLE);
-				} else {
-					viewHolder.contact_picture.setVisibility(View.GONE);
-				}
-			}
-			return view;
-		} else {
-			loadAvatar(message, viewHolder.contact_picture, activity.getPixel(48));
-		}
+        switch (type) {
+            case DATE_SEPARATOR:
+                if (UIHelper.today(message.getTimeSent())) {
+                    viewHolder.status_message.setText(R.string.today);
+                } else if (UIHelper.yesterday(message.getTimeSent())) {
+                    viewHolder.status_message.setText(R.string.yesterday);
+                } else {
+                    viewHolder.status_message.setText(DateUtils.formatDateTime(activity, message.getTimeSent(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
+                }
+                viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.date_bubble_grey : R.drawable.date_bubble_white);
+                return view;
+            case STATUS:
+                if ("LOAD_MORE".equals(message.getBody())) {
+                    viewHolder.status_message.setVisibility(View.GONE);
+                    viewHolder.contact_picture.setVisibility(View.GONE);
+                    viewHolder.load_more_messages.setVisibility(View.VISIBLE);
+                    viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages((Conversation) message.getConversation()));
+                } else {
+                    viewHolder.status_message.setVisibility(View.VISIBLE);
+                    viewHolder.load_more_messages.setVisibility(View.GONE);
+                    viewHolder.status_message.setText(message.getBody());
+                    boolean showAvatar;
+                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                        showAvatar = true;
+                        loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
+                    } else if (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0)) {
+                        showAvatar = true;
+                        loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
+                    } else {
+                        showAvatar = false;
+                    }
+                    if (showAvatar) {
+                        viewHolder.contact_picture.setAlpha(0.5f);
+                        viewHolder.contact_picture.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.contact_picture.setVisibility(View.GONE);
+                    }
+                }
+                return view;
+            default:
+                loadAvatar(message, viewHolder.contact_picture, activity.getPixel(48));
+                break;
+        }
 
 		resetClickListener(viewHolder.message_box, viewHolder.messageBody);
 
@@ -777,13 +779,17 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 		final Transferable transferable = message.getTransferable();
 		if (transferable != null && transferable.getStatus() != Transferable.STATUS_UPLOADING) {
-			if (transferable.getStatus() == Transferable.STATUS_OFFER) {
-				displayDownloadableMessage(viewHolder, message, activity.getString(R.string.download_x_file, UIHelper.getFileDescriptionString(activity, message)));
-			} else if (transferable.getStatus() == Transferable.STATUS_OFFER_CHECK_FILESIZE) {
-				displayDownloadableMessage(viewHolder, message, activity.getString(R.string.check_x_filesize, UIHelper.getFileDescriptionString(activity, message)));
-			} else {
-				displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
-			}
+            switch (transferable.getStatus()) {
+                case Transferable.STATUS_OFFER:
+                    displayDownloadableMessage(viewHolder, message, activity.getString(R.string.download_x_file, UIHelper.getFileDescriptionString(activity, message)));
+                    break;
+                case Transferable.STATUS_OFFER_CHECK_FILESIZE:
+                    displayDownloadableMessage(viewHolder, message, activity.getString(R.string.check_x_filesize, UIHelper.getFileDescriptionString(activity, message)));
+                    break;
+                default:
+                    displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
+                    break;
+            }
 		} else if (message.isFileOrImage() && message.getEncryption() != Message.ENCRYPTION_PGP && message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED) {
 			if (message.getFileParams().width > 0 && message.getFileParams().height > 0) {
 				displayImageMessage(viewHolder, message);

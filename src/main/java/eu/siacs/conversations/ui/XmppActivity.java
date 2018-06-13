@@ -361,29 +361,33 @@ public abstract class XmppActivity extends ActionBarActivity {
 			showAddToRosterDialog(conversation.getContact());
 		} else {
 			final Presences presences = contact.getPresences();
-			if (presences.size() == 0) {
-				if (!contact.getOption(Contact.Options.TO)
-						&& !contact.getOption(Contact.Options.ASKING)
-						&& contact.getAccount().getStatus() == Account.State.ONLINE) {
-					showAskForPresenceDialog(contact);
-				} else if (!contact.getOption(Contact.Options.TO)
-						|| !contact.getOption(Contact.Options.FROM)) {
-					PresenceSelector.warnMutualPresenceSubscription(this, conversation, listener);
-				} else {
-					conversation.setNextCounterpart(null);
-					listener.onPresenceSelected();
-				}
-			} else if (presences.size() == 1) {
-				String presence = presences.toResourceArray()[0];
-				try {
-					conversation.setNextCounterpart(Jid.of(contact.getJid().getLocal(), contact.getJid().getDomain(), presence));
-				} catch (IllegalArgumentException e) {
-					conversation.setNextCounterpart(null);
-				}
-				listener.onPresenceSelected();
-			} else {
-				PresenceSelector.showPresenceSelectionDialog(this, conversation, listener);
-			}
+            switch (presences.size()) {
+                case 0:
+                    if (!contact.getOption(Contact.Options.TO)
+                            && !contact.getOption(Contact.Options.ASKING)
+                            && contact.getAccount().getStatus() == Account.State.ONLINE) {
+                        showAskForPresenceDialog(contact);
+                    } else if (!contact.getOption(Contact.Options.TO)
+                            || !contact.getOption(Contact.Options.FROM)) {
+                        PresenceSelector.warnMutualPresenceSubscription(this, conversation, listener);
+                    } else {
+                        conversation.setNextCounterpart(null);
+                        listener.onPresenceSelected();
+                    }
+                    break;
+                case 1:
+                    String presence = presences.toResourceArray()[0];
+                    try {
+                        conversation.setNextCounterpart(Jid.of(contact.getJid().getLocal(), contact.getJid().getDomain(), presence));
+                    } catch (IllegalArgumentException e) {
+                        conversation.setNextCounterpart(null);
+                    }
+                    listener.onPresenceSelected();
+                    break;
+                default:
+                    PresenceSelector.showPresenceSelectionDialog(this, conversation, listener);
+                    break;
+            }
 		}
 	}
 

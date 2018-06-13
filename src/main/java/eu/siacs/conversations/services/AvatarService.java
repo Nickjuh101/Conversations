@@ -293,32 +293,38 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 		Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		bitmap.eraseColor(TRANSPARENT);
-		if (count == 0) {
-			throw new AssertionError("Unable to draw tiles for 0 users");
-		} else if (count == 1) {
-			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
-			drawTile(canvas, users.get(0).getAccount(), size / 2 + 1, 0, size, size);
-		} else if (count == 2) {
-			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
-			drawTile(canvas, users.get(1), size / 2 + 1, 0, size, size);
-		} else if (count == 3) {
-			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
-			drawTile(canvas, users.get(1), size / 2 + 1, 0, size, size / 2 - 1);
-			drawTile(canvas, users.get(2), size / 2 + 1, size / 2 + 1, size,
-					size);
-		} else if (count == 4) {
-			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size / 2 - 1);
-			drawTile(canvas, users.get(1), 0, size / 2 + 1, size / 2 - 1, size);
-			drawTile(canvas, users.get(2), size / 2 + 1, 0, size, size / 2 - 1);
-			drawTile(canvas, users.get(3), size / 2 + 1, size / 2 + 1, size,
-					size);
-		} else {
-			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size / 2 - 1);
-			drawTile(canvas, users.get(1), 0, size / 2 + 1, size / 2 - 1, size);
-			drawTile(canvas, users.get(2), size / 2 + 1, 0, size, size / 2 - 1);
-			drawTile(canvas, "\u2026", PLACEHOLDER_COLOR, size / 2 + 1, size / 2 + 1,
-					size, size);
-		}
+        switch (count) {
+            case 0:
+                throw new AssertionError("Unable to draw tiles for 0 users");
+            case 1:
+                drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
+                drawTile(canvas, users.get(0).getAccount(), size / 2 + 1, 0, size, size);
+                break;
+            case 2:
+                drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
+                drawTile(canvas, users.get(1), size / 2 + 1, 0, size, size);
+                break;
+            case 3:
+                drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
+                drawTile(canvas, users.get(1), size / 2 + 1, 0, size, size / 2 - 1);
+                drawTile(canvas, users.get(2), size / 2 + 1, size / 2 + 1, size,
+                        size);
+                break;
+            case 4:
+                drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size / 2 - 1);
+                drawTile(canvas, users.get(1), 0, size / 2 + 1, size / 2 - 1, size);
+                drawTile(canvas, users.get(2), size / 2 + 1, 0, size, size / 2 - 1);
+                drawTile(canvas, users.get(3), size / 2 + 1, size / 2 + 1, size,
+                        size);
+                break;
+            default:
+                drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size / 2 - 1);
+                drawTile(canvas, users.get(1), 0, size / 2 + 1, size / 2 - 1, size);
+                drawTile(canvas, users.get(2), size / 2 + 1, 0, size, size / 2 - 1);
+                drawTile(canvas, "\u2026", PLACEHOLDER_COLOR, size / 2 + 1, size / 2 + 1,
+                        size, size);
+                break;
+        }
 		return bitmap;
 	}
 

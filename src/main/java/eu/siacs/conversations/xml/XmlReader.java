@@ -51,27 +51,28 @@ public class XmlReader {
 	public Tag readTag() throws XmlPullParserException, IOException {
 		try {
 			while (this.is != null && parser.next() != XmlPullParser.END_DOCUMENT) {
-				if (parser.getEventType() == XmlPullParser.START_TAG) {
-					Tag tag = Tag.start(parser.getName());
-					final String xmlns = parser.getNamespace();
-					for (int i = 0; i < parser.getAttributeCount(); ++i) {
-						final String prefix = parser.getAttributePrefix(i);
-						String name;
-						if (prefix != null && !prefix.isEmpty()) {
-							name = prefix+":"+parser.getAttributeName(i);
-						} else {
-							name = parser.getAttributeName(i);
+				switch (parser.getEventType()) {
+					case XmlPullParser.START_TAG:
+						Tag tag = Tag.start(parser.getName());
+						final String xmlns = parser.getNamespace();
+						for (int i = 0; i < parser.getAttributeCount(); ++i) {
+							final String prefix = parser.getAttributePrefix(i);
+							String name;
+							if (prefix != null && !prefix.isEmpty()) {
+								name = prefix + ":" + parser.getAttributeName(i);
+							} else {
+								name = parser.getAttributeName(i);
+							}
+							tag.setAttribute(name, parser.getAttributeValue(i));
 						}
-						tag.setAttribute(name,parser.getAttributeValue(i));
-					}
-					if (xmlns != null) {
-						tag.setAttribute("xmlns", xmlns);
-					}
-					return tag;
-				} else if (parser.getEventType() == XmlPullParser.END_TAG) {
-					return Tag.end(parser.getName());
-				} else if (parser.getEventType() == XmlPullParser.TEXT) {
-					return Tag.no(parser.getText());
+						if (xmlns != null) {
+							tag.setAttribute("xmlns", xmlns);
+						}
+						return tag;
+					case XmlPullParser.END_TAG:
+						return Tag.end(parser.getName());
+					case XmlPullParser.TEXT:
+						return Tag.no(parser.getText());
 				}
 			}
 

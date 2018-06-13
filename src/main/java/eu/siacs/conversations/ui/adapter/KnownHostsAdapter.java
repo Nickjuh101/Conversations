@@ -19,24 +19,27 @@ public class KnownHostsAdapter extends ArrayAdapter<String> {
 			if (constraint != null) {
 				ArrayList<String> suggestions = new ArrayList<>();
 				final String[] split = constraint.toString().split("@");
-				if (split.length == 1) {
-					for (String domain : domains) {
-						suggestions.add(split[0].toLowerCase(Locale
-								.getDefault()) + "@" + domain);
-					}
-				} else if (split.length == 2) {
-					for (String domain : domains) {
-						if (domain.contentEquals(split[1])) {
-							suggestions.clear();
-							break;
-						} else if (domain.contains(split[1])) {
-							suggestions.add(split[0].toLowerCase(Locale
-									.getDefault()) + "@" + domain);
-						}
-					}
-				} else {
-					return new FilterResults();
-				}
+                switch (split.length) {
+                    case 1:
+                        for (String domain : domains) {
+                            suggestions.add(split[0].toLowerCase(Locale
+                                    .getDefault()) + "@" + domain);
+                        }
+                        break;
+                    case 2:
+                        for (String domain : domains) {
+                            if (domain.contentEquals(split[1])) {
+                                suggestions.clear();
+                                break;
+                            } else if (domain.contains(split[1])) {
+                                suggestions.add(split[0].toLowerCase(Locale
+                                        .getDefault()) + "@" + domain);
+                            }
+                        }
+                        break;
+                    default:
+                        return new FilterResults();
+                }
 				FilterResults filterResults = new FilterResults();
 				filterResults.values = suggestions;
 				filterResults.count = suggestions.size();

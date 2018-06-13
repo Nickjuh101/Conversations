@@ -955,10 +955,8 @@ public class FileBackend {
 				source.recycle();
 			}
 			return dest;
-		} catch (SecurityException e) {
+		} catch (SecurityException | FileNotFoundException e) {
 			return null; //android 6.0 with revoked permissions for example
-		} catch (FileNotFoundException e) {
-			return null;
 		} finally {
 			close(is);
 		}

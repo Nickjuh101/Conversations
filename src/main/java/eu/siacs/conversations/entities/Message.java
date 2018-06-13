@@ -163,7 +163,7 @@ public class Message extends AbstractEntity {
 		this.edited = edited;
 		this.oob = oob;
 		this.errorMessage = errorMessage;
-		this.readByMarkers = readByMarkers == null ? new HashSet<ReadByMarker>() : readByMarkers;
+		this.readByMarkers = readByMarkers == null ? new HashSet<>() : readByMarkers;
 		this.markable = markable;
 	}
 

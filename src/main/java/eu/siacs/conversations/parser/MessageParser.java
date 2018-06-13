@@ -167,48 +167,52 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 	private void parseEvent(final Element event, final Jid from, final Account account) {
 		Element items = event.findChild("items");
 		String node = items == null ? null : items.getAttribute("node");
-		if ("urn:xmpp:avatar:metadata".equals(node)) {
-			Avatar avatar = Avatar.parseMetadata(items);
-			if (avatar != null) {
-				avatar.owner = from.asBareJid();
-				if (mXmppConnectionService.getFileBackend().isAvatarCached(avatar)) {
-					if (account.getJid().asBareJid().equals(from)) {
-						if (account.setAvatar(avatar.getFilename())) {
-							mXmppConnectionService.databaseBackend.updateAccount(account);
-						}
-						mXmppConnectionService.getAvatarService().clear(account);
-						mXmppConnectionService.updateConversationUi();
-						mXmppConnectionService.updateAccountUi();
-					} else {
-						Contact contact = account.getRoster().getContact(from);
-						contact.setAvatar(avatar);
-						mXmppConnectionService.getAvatarService().clear(contact);
-						mXmppConnectionService.updateConversationUi();
-						mXmppConnectionService.updateRosterUi();
-					}
-				} else if (mXmppConnectionService.isDataSaverDisabled()) {
-					mXmppConnectionService.fetchAvatar(account, avatar);
-				}
-			}
-		} else if ("http://jabber.org/protocol/nick".equals(node)) {
-			final Element i = items.findChild("item");
-			final String nick = i == null ? null : i.findChildContent("nick", Namespace.NICK);
-			if (nick != null) {
-				Contact contact = account.getRoster().getContact(from);
-				if (contact.setPresenceName(nick)) {
-					mXmppConnectionService.getAvatarService().clear(contact);
-				}
-				mXmppConnectionService.updateConversationUi();
-				mXmppConnectionService.updateAccountUi();
-			}
-		} else if (AxolotlService.PEP_DEVICE_LIST.equals(node)) {
-			Element item = items.findChild("item");
-			Set<Integer> deviceIds = mXmppConnectionService.getIqParser().deviceIds(item);
-			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received PEP device list " + deviceIds + " update from " + from + ", processing... ");
-			AxolotlService axolotlService = account.getAxolotlService();
-			axolotlService.registerDevices(from, deviceIds);
-			mXmppConnectionService.updateAccountUi();
-		}
+        switch (node) {
+            case "urn:xmpp:avatar:metadata":
+                Avatar avatar = Avatar.parseMetadata(items);
+                if (avatar != null) {
+                    avatar.owner = from.asBareJid();
+                    if (mXmppConnectionService.getFileBackend().isAvatarCached(avatar)) {
+                        if (account.getJid().asBareJid().equals(from)) {
+                            if (account.setAvatar(avatar.getFilename())) {
+                                mXmppConnectionService.databaseBackend.updateAccount(account);
+                            }
+                            mXmppConnectionService.getAvatarService().clear(account);
+                            mXmppConnectionService.updateConversationUi();
+                            mXmppConnectionService.updateAccountUi();
+                        } else {
+                            Contact contact = account.getRoster().getContact(from);
+                            contact.setAvatar(avatar);
+                            mXmppConnectionService.getAvatarService().clear(contact);
+                            mXmppConnectionService.updateConversationUi();
+                            mXmppConnectionService.updateRosterUi();
+                        }
+                    } else if (mXmppConnectionService.isDataSaverDisabled()) {
+                        mXmppConnectionService.fetchAvatar(account, avatar);
+                    }
+                }
+                break;
+            case "http://jabber.org/protocol/nick":
+                final Element i = items.findChild("item");
+                final String nick = i == null ? null : i.findChildContent("nick", Namespace.NICK);
+                if (nick != null) {
+                    Contact contact = account.getRoster().getContact(from);
+                    if (contact.setPresenceName(nick)) {
+                        mXmppConnectionService.getAvatarService().clear(contact);
+                    }
+                    mXmppConnectionService.updateConversationUi();
+                    mXmppConnectionService.updateAccountUi();
+                }
+                break;
+            case AxolotlService.PEP_DEVICE_LIST:
+                Element item = items.findChild("item");
+                Set<Integer> deviceIds = mXmppConnectionService.getIqParser().deviceIds(item);
+                Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received PEP device list " + deviceIds + " update from " + from + ", processing... ");
+                AxolotlService axolotlService = account.getAxolotlService();
+                axolotlService.registerDevices(from, deviceIds);
+                mXmppConnectionService.updateAccountUi();
+                break;
+        }
 	}
 
 	private boolean handleErrorMessage(Account account, MessagePacket packet) {

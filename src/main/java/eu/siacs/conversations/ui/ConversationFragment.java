@@ -1354,27 +1354,35 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
 		if (grantResults.length > 0)
 			if (allGranted(grantResults)) {
-				if (requestCode == REQUEST_START_DOWNLOAD) {
-					if (this.mPendingDownloadableMessage != null) {
-						startDownloadable(this.mPendingDownloadableMessage);
-					}
-				} else if (requestCode == REQUEST_ADD_EDITOR_CONTENT) {
-					if (this.mPendingEditorContent != null) {
-						attachImageToConversation(this.mPendingEditorContent);
-					}
-				} else {
-					attachFile(requestCode);
-				}
+                switch (requestCode) {
+                    case REQUEST_START_DOWNLOAD:
+                        if (this.mPendingDownloadableMessage != null) {
+                            startDownloadable(this.mPendingDownloadableMessage);
+                        }
+                        break;
+                    case REQUEST_ADD_EDITOR_CONTENT:
+                        if (this.mPendingEditorContent != null) {
+                            attachImageToConversation(this.mPendingEditorContent);
+                        }
+                        break;
+                    default:
+                        attachFile(requestCode);
+                        break;
+                }
 			} else {
 				@StringRes int res;
 				String firstDenied = getFirstDenied(grantResults, permissions);
-				if (Manifest.permission.RECORD_AUDIO.equals(firstDenied)) {
-					res = R.string.no_microphone_permission;
-				} else if (Manifest.permission.CAMERA.equals(firstDenied)) {
-					res = R.string.no_camera_permission;
-				} else {
-					res = R.string.no_storage_permission;
-				}
+                switch (firstDenied) {
+                    case Manifest.permission.RECORD_AUDIO:
+                        res = R.string.no_microphone_permission;
+                        break;
+                    case Manifest.permission.CAMERA:
+                        res = R.string.no_camera_permission;
+                        break;
+                    default:
+                        res = R.string.no_storage_permission;
+                        break;
+                }
 				Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
 			}
 	}
@@ -2136,23 +2144,27 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 			}
 			if (conversation.getMode() == Conversation.MODE_SINGLE) {
 				ChatState state = conversation.getIncomingChatState();
-				if (state == ChatState.COMPOSING) {
-					this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_is_typing, conversation.getName())));
-				} else if (state == ChatState.PAUSED) {
-					this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_has_stopped_typing, conversation.getName())));
-				} else {
-					for (int i = this.messageList.size() - 1; i >= 0; --i) {
-						if (this.messageList.get(i).getStatus() == Message.STATUS_RECEIVED) {
-							return;
-						} else {
-							if (this.messageList.get(i).getStatus() == Message.STATUS_SEND_DISPLAYED) {
-								this.messageList.add(i + 1,
-										Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, conversation.getName())));
-								return;
-							}
-						}
-					}
-				}
+                switch (state) {
+                    case COMPOSING:
+                        this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_is_typing, conversation.getName())));
+                        break;
+                    case PAUSED:
+                        this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_has_stopped_typing, conversation.getName())));
+                        break;
+                    default:
+                        for (int i = this.messageList.size() - 1; i >= 0; --i) {
+                            if (this.messageList.get(i).getStatus() == Message.STATUS_RECEIVED) {
+                                return;
+                            } else {
+                                if (this.messageList.get(i).getStatus() == Message.STATUS_SEND_DISPLAYED) {
+                                    this.messageList.add(i + 1,
+                                            Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, conversation.getName())));
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+                }
 			} else {
 				final MucOptions mucOptions = conversation.getMucOptions();
 				final List<MucOptions.User> allUsers = mucOptions.getUsers();

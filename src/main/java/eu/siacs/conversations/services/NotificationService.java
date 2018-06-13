@@ -547,7 +547,6 @@ public class NotificationService {
 				}
 			}
 		}
-		/** message preview for Android Auto **/
 		for (Message message : messages) {
 			Pair<CharSequence, Boolean> preview = UIHelper.getMessagePreview(mXmppConnectionService, message);
 			// only show user written text
@@ -779,15 +778,18 @@ public class NotificationService {
 			notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification());
 		}
 		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mXmppConnectionService);
-		if (errors.size() == 0) {
-			cancel(ERROR_NOTIFICATION_ID);
-			return;
-		} else if (errors.size() == 1) {
-			mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_account));
-			mBuilder.setContentText(errors.get(0).getJid().asBareJid().toString());
-		} else {
-			mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_accounts));
-			mBuilder.setContentText(mXmppConnectionService.getString(R.string.touch_to_fix));
+		switch (errors.size()) {
+			case 0:
+				cancel(ERROR_NOTIFICATION_ID);
+				return;
+			case 1:
+				mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_account));
+				mBuilder.setContentText(errors.get(0).getJid().asBareJid().toString());
+				break;
+			default:
+				mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_accounts));
+				mBuilder.setContentText(mXmppConnectionService.getString(R.string.touch_to_fix));
+				break;
 		}
 		mBuilder.addAction(R.drawable.ic_autorenew_white_24dp,
 				mXmppConnectionService.getString(R.string.try_again),

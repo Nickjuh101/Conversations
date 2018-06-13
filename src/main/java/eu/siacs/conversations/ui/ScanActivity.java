@@ -95,7 +95,7 @@ public final class ScanActivity extends Activity implements SurfaceTextureListen
 	};
 	private final Runnable fetchAndDecodeRunnable = new Runnable() {
 		private final QRCodeReader reader = new QRCodeReader();
-		private final Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
+		private final Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
 
 		@Override
 		public void run() {
@@ -148,16 +148,18 @@ public final class ScanActivity extends Activity implements SurfaceTextureListen
 
 		private int displayRotation() {
 			final int rotation = getWindowManager().getDefaultDisplay().getRotation();
-			if (rotation == Surface.ROTATION_0)
-				return 0;
-			else if (rotation == Surface.ROTATION_90)
-				return 90;
-			else if (rotation == Surface.ROTATION_180)
-				return 180;
-			else if (rotation == Surface.ROTATION_270)
-				return 270;
-			else
-				throw new IllegalStateException("rotation: " + rotation);
+            switch (rotation) {
+                case Surface.ROTATION_0:
+                    return 0;
+                case Surface.ROTATION_90:
+                    return 90;
+                case Surface.ROTATION_180:
+                    return 180;
+                case Surface.ROTATION_270:
+                    return 270;
+                default:
+                    throw new IllegalStateException("rotation: " + rotation);
+            }
 		}
 	};
 
