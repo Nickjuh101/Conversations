@@ -806,11 +806,7 @@ public class MemorizingTrustManager {
 					return true;
 				} else {
 					LOGGER.log(Level.FINE, "server " + domain + " provided wrong certificate, asking user.");
-					if (interactive) {
-						return interactHostname(cert, domain);
-					} else {
-						return false;
-					}
+					return interactive && interactHostname(cert, domain);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

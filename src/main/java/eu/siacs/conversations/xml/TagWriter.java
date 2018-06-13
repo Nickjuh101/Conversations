@@ -102,11 +102,7 @@ public class TagWriter {
 	}
 
 	public boolean await(long timeout, TimeUnit timeunit) throws InterruptedException {
-		if (stanzaWriterCountDownLatch == null) {
-			return true;
-		} else {
-			return stanzaWriterCountDownLatch.await(timeout, timeunit);
-		}
+		return stanzaWriterCountDownLatch == null || stanzaWriterCountDownLatch.await(timeout, timeunit);
 	}
 
 	public boolean isActive() {

@@ -488,13 +488,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 	}
 
 	protected boolean accountInfoEdited() {
-		if (this.mAccount == null) {
-			return false;
-		}
-		return jidEdited() ||
-				!this.mAccount.getPassword().equals(this.mPassword.getText().toString()) ||
-				!this.mAccount.getHostname().equals(this.mHostname.getText().toString()) ||
-				!String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString());
+		return this.mAccount != null && (jidEdited() || !this.mAccount.getPassword().equals(this.mPassword.getText().toString()) || !this.mAccount.getHostname().equals(this.mHostname.getText().toString()) || !String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString()));
 	}
 
 	protected boolean jidEdited() {

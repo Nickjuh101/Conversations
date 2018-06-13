@@ -297,9 +297,7 @@ public class MucOptions {
 
 			if (role != user.role) return false;
 			if (affiliation != user.affiliation) return false;
-			if (realJid != null ? !realJid.equals(user.realJid) : user.realJid != null)
-				return false;
-			return fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null;
+			return (realJid != null ? realJid.equals(user.realJid) : user.realJid == null) && (fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null);
 
 		}
 

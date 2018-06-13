@@ -18,16 +18,14 @@ public class ReadByMarker {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		ReadByMarker marker = (ReadByMarker) o;
+        ReadByMarker marker = (ReadByMarker) o;
 
-		if (fullJid != null ? !fullJid.equals(marker.fullJid) : marker.fullJid != null)
-			return false;
-		return realJid != null ? realJid.equals(marker.realJid) : marker.realJid == null;
+        return (fullJid != null ? fullJid.equals(marker.fullJid) : marker.fullJid == null) && (realJid != null ? realJid.equals(marker.realJid) : marker.realJid == null);
 
-	}
+    }
 
 	@Override
 	public int hashCode() {

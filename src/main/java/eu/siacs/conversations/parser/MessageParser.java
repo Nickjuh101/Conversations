@@ -5,7 +5,6 @@ import android.util.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -93,11 +92,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			} else {
 				if (isTypeGroupChat) {
 					MucOptions.User user = c.getMucOptions().findUserByFullJid(from);
-					if (user != null) {
-						return user.setChatState(state);
-					} else {
-						return false;
-					}
+					return user != null && user.setChatState(state);
 				} else {
 					return c.setIncomingChatState(state);
 				}

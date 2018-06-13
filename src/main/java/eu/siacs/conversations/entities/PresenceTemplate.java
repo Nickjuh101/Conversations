@@ -61,9 +61,7 @@ public class PresenceTemplate extends AbstractEntity {
 
 		PresenceTemplate template = (PresenceTemplate) o;
 
-		if (statusMessage != null ? !statusMessage.equals(template.statusMessage) : template.statusMessage != null)
-			return false;
-		return status == template.status;
+		return (statusMessage != null ? statusMessage.equals(template.statusMessage) : template.statusMessage == null) && status == template.status;
 
 	}
 

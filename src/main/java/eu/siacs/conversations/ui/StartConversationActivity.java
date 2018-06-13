@@ -1182,14 +1182,11 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 		}
 
 		boolean invite() {
-			if (!isJidValid()) {
-				Toast.makeText(StartConversationActivity.this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
-				return false;
-			}
-			if (getJid() != null) {
-				return handleJid(this);
-			}
-			return false;
-		}
+            if (!isJidValid()) {
+                Toast.makeText(StartConversationActivity.this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return getJid() != null && handleJid(this);
+        }
 	}
 }

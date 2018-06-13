@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 

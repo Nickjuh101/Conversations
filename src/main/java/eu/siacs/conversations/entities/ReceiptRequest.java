@@ -49,14 +49,13 @@ public class ReceiptRequest {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		ReceiptRequest that = (ReceiptRequest) o;
+        ReceiptRequest that = (ReceiptRequest) o;
 
-		if (!jid.equals(that.jid)) return false;
-		return id.equals(that.id);
-	}
+        return jid.equals(that.jid) && id.equals(that.id);
+    }
 
 	@Override
 	public int hashCode() {
