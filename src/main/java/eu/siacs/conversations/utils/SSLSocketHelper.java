@@ -14,7 +14,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 public class SSLSocketHelper {
 
-	public static void setSecurity(final SSLSocket sslSocket) throws NoSuchAlgorithmException {
+	public static void setSecurity(final SSLSocket sslSocket) {
 		final String[] supportProtocols;
 		final Collection<String> supportedProtocols = new LinkedList<>(
 				Arrays.asList(sslSocket.getSupportedProtocols()));

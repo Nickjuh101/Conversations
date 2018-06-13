@@ -14,9 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -103,7 +101,7 @@ public abstract class LocationActivity extends ActionBarActivity implements Loca
 		final IConfigurationProvider config = Configuration.getInstance();
 		config.load(ctx, getPreferences());
 		config.setUserAgentValue(BuildConfig.APPLICATION_ID + "_" + BuildConfig.VERSION_CODE);
-		if (Config.FORCE_ORBOT || getBooleanPreference("use_tor", R.bool.use_tor)) {
+		if (Config.FORCE_ORBOT || getBooleanPreference()) {
 			try {
 				config.setHttpProxy(HttpConnectionManager.getProxy());
 			} catch (IOException e) {
@@ -296,8 +294,8 @@ public abstract class LocationActivity extends ActionBarActivity implements Loca
 		return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
 
-	protected boolean getBooleanPreference(String name, @BoolRes int res) {
-		return getPreferences().getBoolean(name, getResources().getBoolean(res));
+	protected boolean getBooleanPreference() {
+		return getPreferences().getBoolean("use_tor", getResources().getBoolean(R.bool.use_tor));
 	}
 
 	protected boolean isLocationEnabled() {

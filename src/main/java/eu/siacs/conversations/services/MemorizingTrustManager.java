@@ -116,7 +116,7 @@ public class MemorizingTrustManager {
 	AppCompatActivity foregroundAct;
 	NotificationManager notificationManager;
 	private static int decisionId = 0;
-	private static SparseArray<MTMDecision> openDecisions = new SparseArray<MTMDecision>();
+	private static SparseArray<MTMDecision> openDecisions = new SparseArray<>();
 
 	Handler masterHandler;
 	private File keyStoreFile;
@@ -427,7 +427,7 @@ public class MemorizingTrustManager {
 			} catch (CertificateException e) {
 				boolean trustSystemCAs = !PreferenceManager.getDefaultSharedPreferences(master).getBoolean("dont_trust_system_cas", false);
 				if (domain != null && isServer && trustSystemCAs && !isIp(domain)) {
-					String hash = getBase64Hash(chain[0],"SHA-256");
+					String hash = getBase64Hash(chain[0]);
 					List<String> fingerprints = getPoshFingerprints(domain);
 					if (hash != null && fingerprints.contains(hash)) {
 						Log.d("mtm","trusted cert fingerprint of "+domain+" via posh");
@@ -573,10 +573,10 @@ public class MemorizingTrustManager {
 						|| PATTERN_IPV6_HEXCOMPRESSED.matcher(server).matches());
 	}
 
-	private static String getBase64Hash(X509Certificate certificate, String digest) throws CertificateEncodingException {
+	private static String getBase64Hash(X509Certificate certificate) throws CertificateEncodingException {
 		MessageDigest md;
 		try {
-			md = MessageDigest.getInstance(digest);
+			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			return null;
 		}
@@ -600,7 +600,7 @@ public class MemorizingTrustManager {
 	}
 
 	private static String hexString(byte[] data) {
-		StringBuffer si = new StringBuffer();
+		StringBuilder si = new StringBuilder();
 		for (int i = 0; i < data.length; i++) {
 			si.append(String.format("%02x", data[i]));
 			if (i < data.length - 1)
@@ -676,7 +676,7 @@ public class MemorizingTrustManager {
 				Object name = altName.get(1);
 				if (name instanceof String) {
 					si.append("[");
-					si.append((Integer)altName.get(0));
+					si.append(altName.get(0));
 					si.append("] ");
 					si.append(name);
 					si.append("\n");
@@ -709,24 +709,22 @@ public class MemorizingTrustManager {
 		MTMDecision choice = new MTMDecision();
 		final int myId = createDecisionId(choice);
 
-		masterHandler.post(new Runnable() {
-			public void run() {
-				Intent ni = new Intent(master, MemorizingActivity.class);
-				ni.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				ni.setData(Uri.parse(MemorizingTrustManager.class.getName() + "/" + myId));
-				ni.putExtra(DECISION_INTENT_ID, myId);
-				ni.putExtra(DECISION_INTENT_CERT, message);
-				ni.putExtra(DECISION_TITLE_ID, titleId);
+		masterHandler.post(() -> {
+            Intent ni = new Intent(master, MemorizingActivity.class);
+            ni.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ni.setData(Uri.parse(MemorizingTrustManager.class.getName() + "/" + myId));
+            ni.putExtra(DECISION_INTENT_ID, myId);
+            ni.putExtra(DECISION_INTENT_CERT, message);
+            ni.putExtra(DECISION_TITLE_ID, titleId);
 
-				// we try to directly start the activity and fall back to
-				// making a notification
-				try {
-					getUI().startActivity(ni);
-				} catch (Exception e) {
-					LOGGER.log(Level.FINE, "startActivity(MemorizingActivity)", e);
-				}
-			}
-		});
+            // we try to directly start the activity and fall back to
+            // making a notification
+            try {
+                getUI().startActivity(ni);
+            } catch (Exception e) {
+                LOGGER.log(Level.FINE, "startActivity(MemorizingActivity)", e);
+            }
+        });
 
 		LOGGER.log(Level.FINE, "openDecisions: " + openDecisions + ", waiting on " + myId);
 		try {
@@ -812,11 +810,7 @@ public class MemorizingTrustManager {
 					return true;
 				} else {
 					LOGGER.log(Level.FINE, "server " + domain + " provided wrong certificate, asking user.");
-					if (interactive) {
-						return interactHostname(cert, domain);
-					} else {
-						return false;
-					}
+					return interactive && interactHostname(cert, domain);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

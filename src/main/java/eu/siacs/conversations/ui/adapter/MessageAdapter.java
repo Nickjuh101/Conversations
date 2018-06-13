@@ -222,11 +222,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		return this.getItemViewType(getItem(position));
 	}
 
-	private int getMessageTextColor(boolean onDark, boolean primary) {
+	private int getMessageTextColor(boolean onDark) {
 		if (onDark) {
-			return ContextCompat.getColor(activity, primary ? R.color.white : R.color.white70);
+			return ContextCompat.getColor(activity, false ? R.color.white : R.color.white70);
 		} else {
-			return ContextCompat.getColor(activity, primary ? R.color.black87 : R.color.black54);
+			return ContextCompat.getColor(activity, false ? R.color.black87 : R.color.black54);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 			} else {
 				viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption);
 			}
-			viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
+			viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground));
 		}
 		if (message.getEncryption() == Message.ENCRYPTION_NONE) {
 			viewHolder.indicator.setVisibility(View.GONE);
@@ -400,7 +400,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 			body.insert(end, "\n");
 			body.setSpan(new DividerSpan(false), end, end + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
-		int color = darkBackground ? this.getMessageTextColor(darkBackground, false)
+		int color = darkBackground ? this.getMessageTextColor(darkBackground)
 				: ContextCompat.getColor(activity, R.color.green700_desaturated);
 		DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
 		body.setSpan(new QuoteSpan(color, metrics), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -421,7 +421,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 			if (lineStart == -1) {
 				if (previous == '\n') {
 					if ((current == '>' && UIHelper.isPositionFollowedByQuoteableCharacter(body, i))
-							|| current == '\u00bb' && !UIHelper.isPositionFollowedByQuote(body, i)) {
+							|| current == '\u00bb' && UIHelper.isPositionFollowedByQuote(body, i)) {
 						// Line start with quote
 						lineStart = i;
 						if (quoteStart == -1) quoteStart = i;
@@ -518,7 +518,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 				} else {
 					body.insert(privateMarkerIndex, " ");
 				}
-				body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				if (hasMeCommand) {
 					body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1,

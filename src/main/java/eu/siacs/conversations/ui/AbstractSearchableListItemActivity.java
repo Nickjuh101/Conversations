@@ -33,16 +33,12 @@ public abstract class AbstractSearchableListItemActivity extends XmppActivity {
 
 		@Override
 		public boolean onMenuItemActionExpand(final MenuItem item) {
-			mSearchEditText.post(new Runnable() {
-
-				@Override
-				public void run() {
-					mSearchEditText.requestFocus();
-					final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.showSoftInput(mSearchEditText,
-							InputMethodManager.SHOW_IMPLICIT);
-				}
-			});
+			mSearchEditText.post(() -> {
+                mSearchEditText.requestFocus();
+                final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchEditText,
+                        InputMethodManager.SHOW_IMPLICIT);
+            });
 
 			return true;
 		}
@@ -108,7 +104,7 @@ public abstract class AbstractSearchableListItemActivity extends XmppActivity {
 		getMenuInflater().inflate(R.menu.choose_contact, menu);
 		final MenuItem menuSearchView = menu.findItem(R.id.action_search);
 		final View mSearchView = menuSearchView.getActionView();
-		mSearchEditText = (EditText) mSearchView.findViewById(R.id.search_field);
+		mSearchEditText = mSearchView.findViewById(R.id.search_field);
 		mSearchEditText.addTextChangedListener(mSearchTextWatcher);
 		menuSearchView.setOnActionExpandListener(mOnActionExpandListener);
 		return true;

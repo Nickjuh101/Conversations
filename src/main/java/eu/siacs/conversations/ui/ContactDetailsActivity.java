@@ -240,16 +240,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 			case R.id.action_edit_contact:
 				Uri systemAccount = contact.getSystemAccount();
 				if (systemAccount == null) {
-					quickEdit(contact.getDisplayName(), 0, new OnValueEdited() {
-
-						@Override
-						public String onValueEdited(String value) {
-							contact.setServerName(value);
-							ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
-							populateView();
-							return null;
-						}
-					});
+					quickEdit(contact.getDisplayName(), 0, value -> {
+                        contact.setServerName(value);
+                        ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
+                        populateView();
+                        return null;
+                    });
 				} else {
 					Intent intent = new Intent(Intent.ACTION_EDIT);
 					intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
@@ -402,7 +398,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 			boolean showsInactive = false;
 			for (final XmppAxolotlSession session : axolotlService.findSessionsForContact(contact)) {
 				final FingerprintStatus trust = session.getTrust();
-				hasKeys |= !trust.isCompromised();
+				hasKeys |= trust.isCompromised();
 				if (!trust.isActive()) {
 					if (showInactiveOmemo) {
 						showsInactive = true;
@@ -411,7 +407,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 						continue;
 					}
 				}
-				if (!trust.isCompromised()) {
+				if (trust.isCompromised()) {
 					boolean highlight = session.getFingerprint().equals(messageFingerprint);
 					addFingerprintRow(binding.detailsContactKeys, session, highlight);
 				}
@@ -432,8 +428,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 		if (Config.supportOpenPgp() && contact.getPgpKeyId() != 0) {
 			hasKeys = true;
 			View view = inflater.inflate(R.layout.contact_key, binding.detailsContactKeys, false);
-			TextView key = (TextView) view.findViewById(R.id.key);
-			TextView keyType = (TextView) view.findViewById(R.id.key_type);
+			TextView key = view.findViewById(R.id.key);
+			TextView keyType = view.findViewById(R.id.key_type);
 			keyType.setText(R.string.openpgp_key_id);
 			if ("pgp".equals(messageFingerprint)) {
 				keyType.setTextAppearance(this, R.style.TextAppearance_Conversations_Caption_Highlight);

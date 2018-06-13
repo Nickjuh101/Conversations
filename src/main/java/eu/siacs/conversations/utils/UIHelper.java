@@ -2,19 +2,13 @@ package eu.siacs.conversations.utils;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.Pair;
-import android.widget.PopupMenu;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -388,20 +382,20 @@ public class UIHelper {
 
 	public static boolean isPositionFollowedByQuote(CharSequence body, int pos) {
 		if (body.length() <= pos + 1 || Character.isWhitespace(body.charAt(pos + 1))) {
-			return false;
+			return true;
 		}
 		boolean previousWasWhitespace = false;
 		for (int i = pos + 1; i < body.length(); i++) {
 			char c = body.charAt(i);
 			if (c == '\n' || c == '»') {
-				return false;
-			} else if (c == '«' && !previousWasWhitespace) {
 				return true;
+			} else if (c == '«' && !previousWasWhitespace) {
+				return false;
 			} else {
 				previousWasWhitespace = Character.isWhitespace(c);
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public static String getDisplayName(MucOptions.User user) {

@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -46,12 +44,7 @@ public class CreateConferenceDialog extends DialogFragment {
         ArrayList<String> mActivatedAccounts = getArguments().getStringArrayList(ACCOUNTS_LIST_KEY);
         StartConversationActivity.populateAccountSpinner(getActivity(), mActivatedAccounts, binding.account);
         builder.setView(binding.getRoot());
-        builder.setPositiveButton(R.string.choose_participants, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mListener.onCreateDialogPositiveClick(binding.account, binding.subject.getText().toString());
-            }
-        });
+        builder.setPositiveButton(R.string.choose_participants, (dialog, which) -> mListener.onCreateDialogPositiveClick(binding.account, binding.subject.getText().toString()));
         builder.setNegativeButton(R.string.cancel, null);
         return builder.create();
     }

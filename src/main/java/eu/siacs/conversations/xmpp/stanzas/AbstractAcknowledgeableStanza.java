@@ -2,7 +2,6 @@ package eu.siacs.conversations.xmpp.stanzas;
 
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.InvalidJid;
-import rocks.xmpp.addr.Jid;
 
 abstract public class AbstractAcknowledgeableStanza extends AbstractStanza {
 
@@ -32,6 +31,6 @@ abstract public class AbstractAcknowledgeableStanza extends AbstractStanza {
 	}
 
 	public boolean valid() {
-		return InvalidJid.isValid(getFrom()) && InvalidJid.isValid(getTo());
+		return !InvalidJid.isValid(getFrom()) || !InvalidJid.isValid(getTo());
 	}
 }

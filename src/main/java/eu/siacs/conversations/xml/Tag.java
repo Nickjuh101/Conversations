@@ -7,6 +7,7 @@ import java.util.Set;
 
 import eu.siacs.conversations.utils.XmlHelper;
 
+@SuppressWarnings("WhileLoopReplaceableByForEach")
 public class Tag {
 	public static final int NO = -1;
 	public static final int START = 0;
@@ -15,7 +16,7 @@ public class Tag {
 
 	protected int type;
 	protected String name;
-	protected Hashtable<String, String> attributes = new Hashtable<String, String>();
+	protected Hashtable<String, String> attributes = new Hashtable<>();
 
 	protected Tag(int type, String name) {
 		this.type = type;
@@ -57,15 +58,11 @@ public class Tag {
 	}
 
 	public boolean isStart(String needle) {
-		if (needle == null)
-			return false;
-		return (this.type == START) && (needle.equals(this.name));
+		return needle != null && (this.type == START) && (needle.equals(this.name));
 	}
 
 	public boolean isEnd(String needle) {
-		if (needle == null)
-			return false;
-		return (this.type == END) && (needle.equals(this.name));
+		return needle != null && (this.type == END) && (needle.equals(this.name));
 	}
 
 	public boolean isNo() {

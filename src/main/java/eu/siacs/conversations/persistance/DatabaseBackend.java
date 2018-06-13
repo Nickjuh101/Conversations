@@ -1238,9 +1238,9 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 				args);
 	}
 
-	private Cursor getIdentityKeyCursor(Account account, String name, boolean own) {
+	private Cursor getIdentityKeyCursor(Account account, String name) {
 		final SQLiteDatabase db = this.getReadableDatabase();
-		return getIdentityKeyCursor(db, account, name, own);
+		return getIdentityKeyCursor(db, account, name, false);
 	}
 
 	private Cursor getIdentityKeyCursor(SQLiteDatabase db, Account account, String name, boolean own) {
@@ -1313,7 +1313,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
 	public Set<IdentityKey> loadIdentityKeys(Account account, String name, FingerprintStatus status) {
 		Set<IdentityKey> identityKeys = new HashSet<>();
-		Cursor cursor = getIdentityKeyCursor(account, name, false);
+		Cursor cursor = getIdentityKeyCursor(account, name);
 
 		while (cursor.moveToNext()) {
 			if (status != null && !FingerprintStatus.fromCursor(cursor).equals(status)) {

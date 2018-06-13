@@ -297,7 +297,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 			throw new AssertionError("Unable to draw tiles for 0 users");
 		} else if (count == 1) {
 			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
-			drawTile(canvas, users.get(0).getAccount(), size / 2 + 1, 0, size, size);
+			drawTile(canvas, users.get(0).getAccount(), size / 2 + 1, size, size);
 		} else if (count == 2) {
 			drawTile(canvas, users.get(0), 0, 0, size / 2 - 1, size);
 			drawTile(canvas, users.get(1), size / 2 + 1, 0, size, size);
@@ -525,18 +525,18 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 		return true;
 	}
 
-	private boolean drawTile(Canvas canvas, Account account, int left, int top, int right, int bottom) {
+	private boolean drawTile(Canvas canvas, Account account, int left, int right, int bottom) {
 		String avatar = account.getAvatar();
 		if (avatar != null) {
 			Uri uri = mXmppConnectionService.getFileBackend().getAvatarUri(avatar);
 			if (uri != null) {
-				if (drawTile(canvas, uri, left, top, right, bottom)) {
+				if (drawTile(canvas, uri, left, 0, right, bottom)) {
 					return true;
 				}
 			}
 		}
 		String name = account.getJid().asBareJid().toString();
-		return drawTile(canvas, name, name, left, top, right, bottom);
+		return drawTile(canvas, name, name, left, 0, right, bottom);
 	}
 
 	private boolean drawTile(Canvas canvas, String name, String seed, int left, int top, int right, int bottom) {

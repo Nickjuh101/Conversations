@@ -69,7 +69,7 @@ public class IqPacket extends AbstractAcknowledgeableStanza {
 	@Override
 	public boolean valid() {
 		String id = getId();
-		return id != null && super.valid();
+		return id == null || super.valid();
 	}
 
 }

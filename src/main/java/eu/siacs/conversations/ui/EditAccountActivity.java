@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -260,14 +259,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
 		}
 	};
-	private final OnClickListener mCancelButtonClickListener = new OnClickListener() {
-
-		@Override
-		public void onClick(final View v) {
-			deleteAccountAndReturnIfNecessary();
-			finish();
-		}
-	};
+	private final OnClickListener mCancelButtonClickListener = v -> {
+        deleteAccountAndReturnIfNecessary();
+        finish();
+    };
 	private Toast mFetchingMamPrefsToast;
 	private String mSavedInstanceAccount;
 	private boolean mSavedInstanceInit = false;
@@ -492,14 +487,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 	}
 
 	protected boolean accountInfoEdited() {
-		if (this.mAccount == null) {
-			return false;
-		}
-		return jidEdited() ||
-				!this.mAccount.getPassword().equals(this.mPassword.getText().toString()) ||
-				!this.mAccount.getHostname().equals(this.mHostname.getText().toString()) ||
-				!String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString());
-	}
+        return this.mAccount != null && (jidEdited() || !this.mAccount.getPassword().equals(this.mPassword.getText().toString()) || !this.mAccount.getHostname().equals(this.mHostname.getText().toString()) || !String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString()));
+    }
 
 	protected boolean jidEdited() {
 		final String unmodified;
@@ -540,48 +529,43 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 		configureActionBar(getSupportActionBar());
 		binding.accountJid.addTextChangedListener(this.mTextWatcher);
 		binding.accountJid.setOnFocusChangeListener(this.mEditTextFocusListener);
-		this.mAccountJidLayout = (TextInputLayout) findViewById(R.id.account_jid_layout);
-		this.mPassword = (EditText) findViewById(R.id.account_password);
+		this.mAccountJidLayout = findViewById(R.id.account_jid_layout);
+		this.mPassword = findViewById(R.id.account_password);
 		this.mPassword.addTextChangedListener(this.mTextWatcher);
-		this.mPasswordLayout = (TextInputLayout) findViewById(R.id.account_password_layout);
-		this.mAvatar = (ImageView) findViewById(R.id.avater);
+		this.mPasswordLayout = findViewById(R.id.account_password_layout);
+		this.mAvatar = findViewById(R.id.avater);
 		this.mAvatar.setOnClickListener(this.mAvatarClickListener);
-		this.mDisableOsOptimizationsButton = (Button) findViewById(R.id.os_optimization_disable);
-		this.getmDisableOsOptimizationsBody = (TextView) findViewById(R.id.os_optimization_body);
-		this.mPgpFingerprintBox = (RelativeLayout) findViewById(R.id.pgp_fingerprint_box);
-		this.mPgpFingerprint = (TextView) findViewById(R.id.pgp_fingerprint);
-		this.getmPgpFingerprintDesc = (TextView) findViewById(R.id.pgp_fingerprint_desc);
-		this.mPgpDeleteFingerprintButton = (ImageButton) findViewById(R.id.action_delete_pgp);
-		this.mAxolotlFingerprint = (TextView) findViewById(R.id.axolotl_fingerprint);
-		this.mAxolotlFingerprintBox = (RelativeLayout) findViewById(R.id.axolotl_fingerprint_box);
-		this.mAxolotlFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_axolotl_to_clipboard);
-		this.mOwnFingerprintDesc = (TextView) findViewById(R.id.own_fingerprint_desc);
-		this.keys = (LinearLayout) findViewById(R.id.other_device_keys);
-		this.mNamePort = (LinearLayout) findViewById(R.id.name_port);
-		this.mHostname = (EditText) findViewById(R.id.hostname);
+		this.mDisableOsOptimizationsButton = findViewById(R.id.os_optimization_disable);
+		this.getmDisableOsOptimizationsBody = findViewById(R.id.os_optimization_body);
+		this.mPgpFingerprintBox = findViewById(R.id.pgp_fingerprint_box);
+		this.mPgpFingerprint = findViewById(R.id.pgp_fingerprint);
+		this.getmPgpFingerprintDesc = findViewById(R.id.pgp_fingerprint_desc);
+		this.mPgpDeleteFingerprintButton = findViewById(R.id.action_delete_pgp);
+		this.mAxolotlFingerprint = findViewById(R.id.axolotl_fingerprint);
+		this.mAxolotlFingerprintBox = findViewById(R.id.axolotl_fingerprint_box);
+		this.mAxolotlFingerprintToClipboardButton = findViewById(R.id.action_copy_axolotl_to_clipboard);
+		this.mOwnFingerprintDesc = findViewById(R.id.own_fingerprint_desc);
+		this.keys = findViewById(R.id.other_device_keys);
+		this.mNamePort = findViewById(R.id.name_port);
+		this.mHostname = findViewById(R.id.hostname);
 		this.mHostname.addTextChangedListener(mTextWatcher);
 		this.mHostname.setOnFocusChangeListener(mEditTextFocusListener);
-		this.mHostnameLayout = (TextInputLayout) findViewById(R.id.hostname_layout);
-		this.mClearDevicesButton = (Button) findViewById(R.id.clear_devices);
+		this.mHostnameLayout = findViewById(R.id.hostname_layout);
+		this.mClearDevicesButton = findViewById(R.id.clear_devices);
 		this.mClearDevicesButton.setOnClickListener(v -> showWipePepDialog());
-		this.mPort = (EditText) findViewById(R.id.port);
+		this.mPort = findViewById(R.id.port);
 		this.mPort.setText("5222");
 		this.mPort.addTextChangedListener(mTextWatcher);
-		this.mPortLayout = (TextInputLayout) findViewById(R.id.port_layout);
-		this.mSaveButton = (Button) findViewById(R.id.save_button);
-		this.mCancelButton = (Button) findViewById(R.id.cancel_button);
+		this.mPortLayout = findViewById(R.id.port_layout);
+		this.mSaveButton = findViewById(R.id.save_button);
+		this.mCancelButton = findViewById(R.id.cancel_button);
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
-		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
+		this.mMoreTable = findViewById(R.id.server_info_more);
 		if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
 			changeMoreTableVisibility(true);
 		}
-		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-				updateSaveButton();
-			}
-		};
+		final OnCheckedChangeListener OnCheckedShowConfirmPassword = (buttonView, isChecked) -> updateSaveButton();
 		this.binding.accountRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
 		if (Config.DISALLOW_REGISTRATION_IN_UI) {
 			this.binding.accountRegisterNew.setVisibility(View.GONE);
@@ -1067,7 +1051,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 			boolean hasKeys = false;
 			keys.removeAllViews();
 			for (XmppAxolotlSession session : mAccount.getAxolotlService().findOwnSessions()) {
-				if (!session.getTrust().isCompromised()) {
+				if (session.getTrust().isCompromised()) {
 					boolean highlight = session.getFingerprint().equals(messageFingerprint);
 					addFingerprintRow(keys, session, highlight);
 					hasKeys = true;

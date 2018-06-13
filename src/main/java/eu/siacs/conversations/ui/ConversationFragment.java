@@ -16,7 +16,6 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -715,7 +714,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 				sendPgpMessage(message);
 				break;
 			case Message.ENCRYPTION_AXOLOTL:
-				if (!trustKeysIfNeeded(REQUEST_TRUST_KEYS_TEXT)) {
+				if (!trustKeysIfNeeded()) {
 					sendMessage(message);
 				}
 				break;
@@ -724,8 +723,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 		}
 	}
 
-	protected boolean trustKeysIfNeeded(int requestCode) {
-		return trustKeysIfNeeded(requestCode, ATTACHMENT_CHOICE_INVALID);
+	protected boolean trustKeysIfNeeded() {
+		return trustKeysIfNeeded(ConversationFragment.REQUEST_TRUST_KEYS_TEXT, ATTACHMENT_CHOICE_INVALID);
 	}
 
 	protected boolean trustKeysIfNeeded(int requestCode, int attachmentChoice) {
@@ -1327,7 +1326,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 								}
 							});
 				} else if (mode == Conversation.MODE_MULTI && conversation.getMucOptions().pgpKeysInUse()) {
-					if (!conversation.getMucOptions().everybodyHasKeys()) {
+					if (conversation.getMucOptions().everybodyHasKeys()) {
 						Toast warning = Toast.makeText(getActivity(), R.string.missing_public_keys, Toast.LENGTH_LONG);
 						warning.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 						warning.show();
@@ -1820,7 +1819,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 			return false;
 		}
 
-		if (!activity.xmppConnectionService.isConversationStillOpen(this.conversation)) {
+		if (activity.xmppConnectionService.isConversationStillOpen(this.conversation)) {
 			activity.onConversationArchived(this.conversation);
 			return false;
 		}
@@ -2034,7 +2033,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 			return;
 		}
 		if (this.conversation != null && this.activity != null && this.activity.xmppConnectionService != null) {
-			if (!activity.xmppConnectionService.isConversationStillOpen(this.conversation)) {
+			if (activity.xmppConnectionService.isConversationStillOpen(this.conversation)) {
 				activity.onConversationArchived(this.conversation);
 				return;
 			}
@@ -2168,7 +2167,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 						final Set<ReadByMarker> markersForMessage = messageList.get(i).getReadByMarkers();
 						final List<MucOptions.User> shownMarkers = new ArrayList<>();
 						for (ReadByMarker marker : markersForMessage) {
-							if (!ReadByMarker.contains(marker, addedMarkers)) {
+							if (ReadByMarker.contains(marker, addedMarkers)) {
 								addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
 								MucOptions.User user = mucOptions.findUser(marker);
 								if (user != null && !users.contains(user)) {
@@ -2324,7 +2323,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 			}
 		} else {
 			if (conversation.getMucOptions().pgpKeysInUse()) {
-				if (!conversation.getMucOptions().everybodyHasKeys()) {
+				if (conversation.getMucOptions().everybodyHasKeys()) {
 					Toast warning = Toast
 							.makeText(getActivity(),
 									R.string.missing_public_keys,
@@ -2507,7 +2506,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 				return;
 			}
 		} else {
-			if (!activity.xmppConnectionService.isConversationStillOpen(conversation)) {
+			if (activity.xmppConnectionService.isConversationStillOpen(conversation)) {
 				clearPending();
 				activity.onConversationArchived(conversation);
 				return;

@@ -9,7 +9,6 @@ import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.SecureRandom;
@@ -196,8 +195,7 @@ abstract class ScramMechanism extends SaslMechanism {
 		}
 	}
 
-	private static synchronized byte[] hmac(final byte[] key, final byte[] input)
-		throws InvalidKeyException {
+	private static synchronized byte[] hmac(final byte[] key, final byte[] input) {
 		HMAC.init(new KeyParameter(key));
 		HMAC.update(input, 0, input.length);
 		final byte[] out = new byte[HMAC.getMacSize()];
