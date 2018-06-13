@@ -20,6 +20,8 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.File;
@@ -286,15 +288,15 @@ public class SettingsActivity extends XmppActivity implements
 			File dir = new File(getFilesDir().getAbsolutePath(), "/Pictures/");
 			File[] array = dir.listFiles();
 			if (array != null) {
-                for (File anArray : array) {
-                    String name = anArray.getName().toLowerCase();
-                    if (name.equals(".nomedia")) {
-                        continue;
-                    }
-                    if (anArray.isFile()) {
-                        anArray.delete();
-                    }
-                }
+				for (int b = 0; b < array.length; b++) {
+					String name = array[b].getName().toLowerCase();
+					if (name.equals(".nomedia")) {
+						continue;
+					}
+					if (array[b].isFile()) {
+						array[b].delete();
+					}
+				}
 			}
 		} catch (Throwable e) {
 			Log.e("CleanCache", e.toString());
@@ -306,15 +308,15 @@ public class SettingsActivity extends XmppActivity implements
 			File dir = new File(getFilesDir().getAbsolutePath(), "/Files/");
 			File[] array = dir.listFiles();
 			if (array != null) {
-                for (File anArray : array) {
-                    String name = anArray.getName().toLowerCase();
-                    if (name.equals(".nomedia")) {
-                        continue;
-                    }
-                    if (anArray.isFile()) {
-                        anArray.delete();
-                    }
-                }
+				for (int b = 0; b < array.length; b++) {
+					String name = array[b].getName().toLowerCase();
+					if (name.equals(".nomedia")) {
+						continue;
+					}
+					if (array[b].isFile()) {
+						array[b].delete();
+					}
+				}
 			}
 		} catch (Throwable e) {
 			Log.e("CleanCache", e.toString());

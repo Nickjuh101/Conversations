@@ -48,21 +48,26 @@ public class ShareViaAccountActivity extends XmppActivity {
 		accountListView = findViewById(R.id.account_list);
 		this.mAccountAdapter = new AccountAdapter(this, accountList, false);
 		accountListView.setAdapter(this.mAccountAdapter);
-		accountListView.setOnItemClickListener((arg0, view, position, arg3) -> {
-            final Account account = accountList.get(position);
-            final String body = getIntent().getStringExtra(EXTRA_BODY);
+		accountListView.setOnItemClickListener(new OnItemClickListener() {
 
-            try {
-                final Jid contact = Jid.of(getIntent().getStringExtra(EXTRA_CONTACT));
-                final Conversation conversation = xmppConnectionService.findOrCreateConversation(
-                        account, contact, false, false);
-                switchToConversation(conversation, body, false);
-            } catch (IllegalArgumentException e) {
-                // ignore error
-            }
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view,
+									int position, long arg3) {
+				final Account account = accountList.get(position);
+				final String body = getIntent().getStringExtra(EXTRA_BODY);
 
-            finish();
-        });
+				try {
+					final Jid contact = Jid.of(getIntent().getStringExtra(EXTRA_CONTACT));
+					final Conversation conversation = xmppConnectionService.findOrCreateConversation(
+							account, contact, false, false);
+					switchToConversation(conversation, body, false);
+				} catch (IllegalArgumentException e) {
+					// ignore error
+				}
+
+				finish();
+			}
+		});
 	}
 
 	@Override

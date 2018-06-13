@@ -5,6 +5,7 @@ import android.util.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -91,9 +92,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				return false;
 			} else {
 				if (isTypeGroupChat) {
-                    MucOptions.User user = c.getMucOptions().findUserByFullJid(from);
-                    return user != null && user.setChatState(state);
-                } else {
+					MucOptions.User user = c.getMucOptions().findUserByFullJid(from);
+					if (user != null) {
+						return user.setChatState(state);
+					} else {
+						return false;
+					}
+				} else {
 					return c.setIncomingChatState(state);
 				}
 			}
@@ -658,7 +663,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 						Log.d(Config.LOGTAG, account.getJid() + ": changing affiliation for "
 								+ user.getRealJid() + " to " + user.getAffiliation() + " in "
 								+ conversation.getJid().asBareJid());
-						if (user.realJidMatchesAccount()) {
+						if (!user.realJidMatchesAccount()) {
 							boolean isNew = conversation.getMucOptions().updateUser(user);
 							mXmppConnectionService.getAvatarService().clear(conversation);
 							mXmppConnectionService.updateMucRosterUi();

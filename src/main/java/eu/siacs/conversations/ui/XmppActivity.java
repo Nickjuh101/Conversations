@@ -33,6 +33,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.annotation.BoolRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
@@ -47,6 +48,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -398,7 +400,7 @@ public abstract class XmppActivity extends ActionBarActivity {
 		setTheme(this.mTheme);
 
 		this.mUsingEnterKey = usingEnterKey();
-		mUseSubject = getBooleanPreference();
+		mUseSubject = getBooleanPreference("use_subject", R.bool.use_subject);
 	}
 
 	protected boolean isCameraFeatureAvailable() {
@@ -448,8 +450,8 @@ public abstract class XmppActivity extends ActionBarActivity {
 		return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
 
-	protected boolean getBooleanPreference() {
-		return getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
+	protected boolean getBooleanPreference(String name, @BoolRes int res) {
+		return getPreferences().getBoolean(name, getResources().getBoolean(res));
 	}
 
 	public boolean useSubjectToIdentifyConference() {
@@ -893,7 +895,7 @@ public abstract class XmppActivity extends ActionBarActivity {
 				imageView.setImageDrawable(null);
 				final BitmapWorkerTask task = new BitmapWorkerTask(this, imageView);
 				final AsyncDrawable asyncDrawable = new AsyncDrawable(
-						getResources(), task);
+						getResources(), null, task);
 				imageView.setImageDrawable(asyncDrawable);
 				try {
 					task.execute(message);
@@ -994,8 +996,8 @@ public abstract class XmppActivity extends ActionBarActivity {
 	private static class AsyncDrawable extends BitmapDrawable {
 		private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-		private AsyncDrawable(Resources res, BitmapWorkerTask bitmapWorkerTask) {
-			super(res, (Bitmap) null);
+		private AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+			super(res, bitmap);
 			bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
 		}
 

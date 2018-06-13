@@ -55,7 +55,11 @@ public class AbstractConnectionManager {
 	}
 
 	public boolean hasStoragePermission() {
-		return Config.ONLY_INTERNAL_STORAGE || Build.VERSION.SDK_INT < Build.VERSION_CODES.M || mXmppConnectionService.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+		if (!Config.ONLY_INTERNAL_STORAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			return mXmppConnectionService.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+		} else {
+			return true;
+		}
 	}
 
 	public static Pair<InputStream,Integer> createInputStream(DownloadableFile file, boolean gcm) throws FileNotFoundException {
@@ -64,7 +68,7 @@ public class AbstractConnectionManager {
 		is = new FileInputStream(file);
 		size = (int) file.getSize();
 		if (file.getKey() == null) {
-			return new Pair<>(is, size);
+			return new Pair<InputStream,Integer>(is,size);
 		}
 		try {
 			if (gcm) {
@@ -77,7 +81,7 @@ public class AbstractConnectionManager {
 				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 				cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(file.getKey(), "AES"), ips);
 				Log.d(Config.LOGTAG, "opening encrypted input stream");
-				return new Pair<>(new CipherInputStream(is, cipher), (size / 16 + 1) * 16);
+				return new Pair<InputStream,Integer>(new CipherInputStream(is, cipher),(size / 16 + 1) * 16);
 			}
 		} catch (InvalidKeyException e) {
 			return null;

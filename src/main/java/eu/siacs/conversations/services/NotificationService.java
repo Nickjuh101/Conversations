@@ -25,6 +25,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -227,7 +228,7 @@ public class NotificationService {
 		synchronized (notifications) {
 			markAsReadIfHasDirectReply(conversation);
 			if (notifications.remove(conversation.getUuid()) != null) {
-				cancel(conversation.getUuid());
+				cancel(conversation.getUuid(), NOTIFICATION_ID);
 				updateNotification(false, true);
 			}
 		}
@@ -278,7 +279,7 @@ public class NotificationService {
 						Builder singleBuilder = buildSingleConversations(entry.getValue());
 						singleBuilder.setGroup(CONVERSATIONS_GROUP);
 						setNotificationColor(singleBuilder);
-						notify(entry.getKey(), singleBuilder.build());
+						notify(entry.getKey(), NOTIFICATION_ID, singleBuilder.build());
 					}
 				}
 				notify(NOTIFICATION_ID, mBuilder.build());
@@ -546,6 +547,7 @@ public class NotificationService {
 				}
 			}
 		}
+		/** message preview for Android Auto **/
 		for (Message message : messages) {
 			Pair<CharSequence, Boolean> preview = UIHelper.getMessagePreview(mXmppConnectionService, message);
 			// only show user written text
@@ -817,10 +819,10 @@ public class NotificationService {
 		return notification;
 	}
 
-	private void notify(String tag, Notification notification) {
+	private void notify(String tag, int id, Notification notification) {
 		final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
 		try {
-			notificationManager.notify(tag, NotificationService.NOTIFICATION_ID, notification);
+			notificationManager.notify(tag, id, notification);
 		} catch (RuntimeException e) {
 			Log.d(Config.LOGTAG, "unable to make notification", e);
 		}
@@ -844,10 +846,10 @@ public class NotificationService {
 		}
 	}
 
-	private void cancel(String tag) {
+	private void cancel(String tag, int id) {
 		final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
 		try {
-			notificationManager.cancel(tag, NotificationService.NOTIFICATION_ID);
+			notificationManager.cancel(tag, id);
 		} catch (RuntimeException e) {
 			Log.d(Config.LOGTAG, "unable to cancel notification", e);
 		}

@@ -48,7 +48,7 @@ public class XmlReader {
 		}
 	}
 
-	public Tag readTag() throws IOException {
+	public Tag readTag() throws XmlPullParserException, IOException {
 		try {
 			while (this.is != null && parser.next() != XmlPullParser.END_DOCUMENT) {
 				if (parser.getEventType() == XmlPullParser.START_TAG) {

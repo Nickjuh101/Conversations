@@ -98,10 +98,13 @@ public class PgpDecryptionService {
 		if (pendingIntent == null
 				&& getOpenPgpApi() != null
 				&& (currentMessage = messages.poll()) != null) {
-			new Thread(() -> {
-                executeApi(currentMessage);
-                decryptNext();
-            }).start();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					executeApi(currentMessage);
+					decryptNext();
+				}
+			}).start();
 		}
 	}
 

@@ -18,14 +18,16 @@ public class ReadByMarker {
 
 	@Override
 	public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        ReadByMarker marker = (ReadByMarker) o;
+		ReadByMarker marker = (ReadByMarker) o;
 
-        return (fullJid != null ? fullJid.equals(marker.fullJid) : marker.fullJid == null) && (realJid != null ? realJid.equals(marker.realJid) : marker.realJid == null);
+		if (fullJid != null ? !fullJid.equals(marker.fullJid) : marker.fullJid != null)
+			return false;
+		return realJid != null ? realJid.equals(marker.realJid) : marker.realJid == null;
 
-    }
+	}
 
 	@Override
 	public int hashCode() {
@@ -140,20 +142,20 @@ public class ReadByMarker {
 		for(ReadByMarker marker : readByMarkers) {
 			if (marker.realJid != null && needle.realJid != null) {
 				if (marker.realJid.asBareJid().equals(needle.realJid.asBareJid())) {
-					return false;
+					return true;
 				}
 			} else if (marker.fullJid != null && needle.fullJid != null) {
 				if (marker.fullJid.equals(needle.fullJid)) {
-					return false;
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public static boolean allUsersRepresented(Collection<MucOptions.User> users, Set<ReadByMarker> markers) {
 		for(MucOptions.User user : users) {
-			if (contains(from(user),markers)) {
+			if (!contains(from(user),markers)) {
 				return false;
 			}
 		}

@@ -98,7 +98,7 @@ public class FingerprintStatus implements Comparable<FingerprintStatus> {
     }
 
     public boolean isCompromised() {
-        return trust != Trust.COMPROMISED;
+        return trust == Trust.COMPROMISED;
     }
 
     public boolean isActive() {

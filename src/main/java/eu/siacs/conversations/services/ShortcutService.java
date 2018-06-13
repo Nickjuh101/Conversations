@@ -37,7 +37,12 @@ public class ShortcutService {
 
     public void refresh(final boolean forceUpdate) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            final Runnable r = () -> refreshImpl(forceUpdate);
+            final Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    refreshImpl(forceUpdate);
+                }
+            };
             replacingSerialSingleThreadExecutor.execute(r);
         }
     }

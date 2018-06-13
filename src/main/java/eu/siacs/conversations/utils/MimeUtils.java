@@ -452,7 +452,10 @@ public final class MimeUtils {
      * @return True iff there is a mimeType entry in the map.
      */
     public static boolean hasMimeType(String mimeType) {
-        return mimeType != null && !mimeType.isEmpty() && mimeTypeToExtensionMap.containsKey(mimeType);
+        if (mimeType == null || mimeType.isEmpty()) {
+            return false;
+        }
+        return mimeTypeToExtensionMap.containsKey(mimeType);
     }
     /**
      * Returns the MIME type for the given extension.
@@ -471,7 +474,10 @@ public final class MimeUtils {
      * @return True iff there is an extension entry in the map.
      */
     public static boolean hasExtension(String extension) {
-        return extension != null && !extension.isEmpty() && extensionToMimeTypeMap.containsKey(extension);
+        if (extension == null || extension.isEmpty()) {
+            return false;
+        }
+        return extensionToMimeTypeMap.containsKey(extension);
     }
     /**
      * Returns the registered extension for the given MIME type. Note that some

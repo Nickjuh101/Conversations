@@ -30,7 +30,9 @@
 package eu.siacs.conversations.ui.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,16 +53,20 @@ public class ConversationMenuConfigurator {
 	}
 
 	public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
-        final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
+		final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 
-        final boolean visible;
-        visible = conversation.getMode() != Conversation.MODE_MULTI || conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
-        menuAttach.setVisible(visible);
-        if (!visible) {
-            return;
-        }
-        menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
-    }
+		final boolean visible;
+		if (conversation.getMode() == Conversation.MODE_MULTI) {
+			visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
+		} else {
+			visible = true;
+		}
+		menuAttach.setVisible(visible);
+		if (!visible) {
+			return;
+		}
+		menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
+	}
 
 	public static void configureEncryptionMenu(@NonNull Conversation conversation, Menu menu) {
 		final MenuItem menuSecure = menu.findItem(R.id.action_security);

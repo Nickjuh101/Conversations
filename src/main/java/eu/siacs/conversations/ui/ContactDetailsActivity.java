@@ -240,12 +240,16 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 			case R.id.action_edit_contact:
 				Uri systemAccount = contact.getSystemAccount();
 				if (systemAccount == null) {
-					quickEdit(contact.getDisplayName(), 0, value -> {
-                        contact.setServerName(value);
-                        ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
-                        populateView();
-                        return null;
-                    });
+					quickEdit(contact.getDisplayName(), 0, new OnValueEdited() {
+
+						@Override
+						public String onValueEdited(String value) {
+							contact.setServerName(value);
+							ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
+							populateView();
+							return null;
+						}
+					});
 				} else {
 					Intent intent = new Intent(Intent.ACTION_EDIT);
 					intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
@@ -398,7 +402,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 			boolean showsInactive = false;
 			for (final XmppAxolotlSession session : axolotlService.findSessionsForContact(contact)) {
 				final FingerprintStatus trust = session.getTrust();
-				hasKeys |= trust.isCompromised();
+				hasKeys |= !trust.isCompromised();
 				if (!trust.isActive()) {
 					if (showInactiveOmemo) {
 						showsInactive = true;
@@ -407,7 +411,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 						continue;
 					}
 				}
-				if (trust.isCompromised()) {
+				if (!trust.isCompromised()) {
 					boolean highlight = session.getFingerprint().equals(messageFingerprint);
 					addFingerprintRow(binding.detailsContactKeys, session, highlight);
 				}

@@ -12,9 +12,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.siacs.conversations.Config;
@@ -22,6 +24,7 @@ import eu.siacs.conversations.crypto.OmemoSetting;
 import eu.siacs.conversations.crypto.PgpDecryptionService;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.utils.JidHelper;
+import eu.siacs.conversations.xmpp.InvalidJid;
 import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.mam.MamReference;
 import rocks.xmpp.addr.Jid;
@@ -384,7 +387,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 		if (mode == MODE_SINGLE) {
 			return Collections.singletonList(getJid().asBareJid());
 		} else {
-			return getJidListAttribute();
+			return getJidListAttribute(ATTRIBUTE_CRYPTO_TARGETS);
 		}
 	}
 
@@ -599,7 +602,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 		} else {
 			defaultEncryption = Message.ENCRYPTION_NONE;
 		}
-		int encryption = this.getIntAttribute(defaultEncryption);
+		int encryption = this.getIntAttribute(ATTRIBUTE_NEXT_ENCRYPTION, defaultEncryption);
 		if (encryption == Message.ENCRYPTION_OTR || encryption < 0) {
 			return defaultEncryption;
 		} else {
@@ -769,11 +772,11 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 		}
 	}
 
-	private List<Jid> getJidListAttribute() {
+	private List<Jid> getJidListAttribute(String key) {
 		ArrayList<Jid> list = new ArrayList<>();
 		synchronized (this.attributes) {
 			try {
-				JSONArray array = this.attributes.getJSONArray(Conversation.ATTRIBUTE_CRYPTO_TARGETS);
+				JSONArray array = this.attributes.getJSONArray(key);
 				for (int i = 0; i < array.length(); ++i) {
 					try {
 						list.add(Jid.of(array.getString(i)));
@@ -788,8 +791,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 		return list;
 	}
 
-	private int getIntAttribute(int defaultValue) {
-		String value = this.getAttribute(Conversation.ATTRIBUTE_NEXT_ENCRYPTION);
+	private int getIntAttribute(String key, int defaultValue) {
+		String value = this.getAttribute(key);
 		if (value == null) {
 			return defaultValue;
 		} else {

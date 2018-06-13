@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -259,10 +260,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
 		}
 	};
-	private final OnClickListener mCancelButtonClickListener = v -> {
-        deleteAccountAndReturnIfNecessary();
-        finish();
-    };
+	private final OnClickListener mCancelButtonClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(final View v) {
+			deleteAccountAndReturnIfNecessary();
+			finish();
+		}
+	};
 	private Toast mFetchingMamPrefsToast;
 	private String mSavedInstanceAccount;
 	private boolean mSavedInstanceInit = false;
@@ -487,8 +492,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 	}
 
 	protected boolean accountInfoEdited() {
-        return this.mAccount != null && (jidEdited() || !this.mAccount.getPassword().equals(this.mPassword.getText().toString()) || !this.mAccount.getHostname().equals(this.mHostname.getText().toString()) || !String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString()));
-    }
+		if (this.mAccount == null) {
+			return false;
+		}
+		return jidEdited() ||
+				!this.mAccount.getPassword().equals(this.mPassword.getText().toString()) ||
+				!this.mAccount.getHostname().equals(this.mHostname.getText().toString()) ||
+				!String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString());
+	}
 
 	protected boolean jidEdited() {
 		final String unmodified;
@@ -565,7 +576,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 		if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
 			changeMoreTableVisibility(true);
 		}
-		final OnCheckedChangeListener OnCheckedShowConfirmPassword = (buttonView, isChecked) -> updateSaveButton();
+		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+				updateSaveButton();
+			}
+		};
 		this.binding.accountRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
 		if (Config.DISALLOW_REGISTRATION_IN_UI) {
 			this.binding.accountRegisterNew.setVisibility(View.GONE);
@@ -1051,7 +1067,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 			boolean hasKeys = false;
 			keys.removeAllViews();
 			for (XmppAxolotlSession session : mAccount.getAxolotlService().findOwnSessions()) {
-				if (session.getTrust().isCompromised()) {
+				if (!session.getTrust().isCompromised()) {
 					boolean highlight = session.getFingerprint().equals(messageFingerprint);
 					addFingerprintRow(keys, session, highlight);
 					hasKeys = true;

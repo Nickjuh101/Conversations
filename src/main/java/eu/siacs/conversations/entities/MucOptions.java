@@ -290,16 +290,18 @@ public class MucOptions {
 
 		@Override
 		public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
 
-            User user = (User) o;
+			User user = (User) o;
 
-            if (role != user.role) return false;
-            if (affiliation != user.affiliation) return false;
-            return (realJid != null ? realJid.equals(user.realJid) : user.realJid == null) && (fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null);
+			if (role != user.role) return false;
+			if (affiliation != user.affiliation) return false;
+			if (realJid != null ? !realJid.equals(user.realJid) : user.realJid != null)
+				return false;
+			return fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null;
 
-        }
+		}
 
 		@Override
 		public int hashCode() {
@@ -316,7 +318,7 @@ public class MucOptions {
 		}
 
 		public boolean realJidMatchesAccount() {
-			return realJid == null || !realJid.equals(options.account.getJid().asBareJid());
+			return realJid != null && realJid.equals(options.account.getJid().asBareJid());
 		}
 
 		@Override
@@ -755,11 +757,11 @@ public class MucOptions {
 		synchronized (users) {
 			for (User user : users) {
 				if (user.getPgpKeyId() == 0) {
-					return true;
+					return false;
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public Jid createJoinJid(String nick) {

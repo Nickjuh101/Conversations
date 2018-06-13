@@ -16,7 +16,7 @@ public class TagWriter {
 
 	private OutputStreamWriter outputStream;
 	private boolean finished = false;
-	private LinkedBlockingQueue<AbstractStanza> writeQueue = new LinkedBlockingQueue<>();
+	private LinkedBlockingQueue<AbstractStanza> writeQueue = new LinkedBlockingQueue<AbstractStanza>();
 	private CountDownLatch stanzaWriterCountDownLatch = null;
 
 	private Thread asyncStanzaWriter = new Thread() {
@@ -102,7 +102,11 @@ public class TagWriter {
 	}
 
 	public boolean await(long timeout, TimeUnit timeunit) throws InterruptedException {
-		return stanzaWriterCountDownLatch == null || stanzaWriterCountDownLatch.await(timeout, timeunit);
+		if (stanzaWriterCountDownLatch == null) {
+			return true;
+		} else {
+			return stanzaWriterCountDownLatch.await(timeout, timeunit);
+		}
 	}
 
 	public boolean isActive() {

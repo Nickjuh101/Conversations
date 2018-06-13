@@ -1186,7 +1186,10 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 				Toast.makeText(StartConversationActivity.this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
 				return false;
 			}
-			return getJid() != null && handleJid(this);
+			if (getJid() != null) {
+				return handleJid(this);
+			}
+			return false;
 		}
 	}
 }

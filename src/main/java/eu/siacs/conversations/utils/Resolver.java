@@ -181,17 +181,18 @@ public class Resolver {
 	public static class Result implements Comparable<Result> {
 		@Override
 		public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
 
-            Result result = (Result) o;
+			Result result = (Result) o;
 
-            if (port != result.port) return false;
-            if (directTls != result.directTls) return false;
-            if (authenticated != result.authenticated) return false;
-            if (priority != result.priority) return false;
-            return (ip != null ? ip.equals(result.ip) : result.ip == null) && (hostname != null ? hostname.equals(result.hostname) : result.hostname == null);
-        }
+			if (port != result.port) return false;
+			if (directTls != result.directTls) return false;
+			if (authenticated != result.authenticated) return false;
+			if (priority != result.priority) return false;
+			if (ip != null ? !ip.equals(result.ip) : result.ip != null) return false;
+			return hostname != null ? hostname.equals(result.hostname) : result.hostname == null;
+		}
 
 		@Override
 		public int hashCode() {

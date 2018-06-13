@@ -109,13 +109,13 @@ public class Account extends AbstractEntity {
 
 	public enum State {
 		DISABLED(false, false),
-		OFFLINE(),
-		CONNECTING(),
-		ONLINE(),
-		NO_INTERNET(),
+		OFFLINE(false),
+		CONNECTING(false),
+		ONLINE(false),
+		NO_INTERNET(false),
 		UNAUTHORIZED,
 		SERVER_NOT_FOUND,
-		REGISTRATION_SUCCESSFUL(),
+		REGISTRATION_SUCCESSFUL(false),
 		REGISTRATION_FAILED(true, false),
 		REGISTRATION_WEB(true, false),
 		REGISTRATION_CONFLICT(true, false),
@@ -132,8 +132,8 @@ public class Account extends AbstractEntity {
 		STREAM_ERROR,
 		POLICY_VIOLATION,
 		PAYMENT_REQUIRED,
-		MISSING_INTERNET_PERMISSION(),
-		NETWORK_IS_UNREACHABLE();
+		MISSING_INTERNET_PERMISSION(false),
+		NETWORK_IS_UNREACHABLE(false);
 
 		private final boolean isError;
 		private final boolean attemptReconnect;
@@ -146,8 +146,8 @@ public class Account extends AbstractEntity {
 			return this.attemptReconnect;
 		}
 
-		State() {
-			this(false, true);
+		State(final boolean isError) {
+			this(isError, true);
 		}
 
 		State(final boolean isError, final boolean reconnect) {

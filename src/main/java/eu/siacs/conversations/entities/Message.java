@@ -15,6 +15,8 @@ import java.util.Set;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
+import eu.siacs.conversations.http.AesGcmURLStreamHandler;
+import eu.siacs.conversations.ui.adapter.MessageAdapter;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.Emoticons;
 import eu.siacs.conversations.utils.GeoHelper;
@@ -161,7 +163,7 @@ public class Message extends AbstractEntity {
 		this.edited = edited;
 		this.oob = oob;
 		this.errorMessage = errorMessage;
-		this.readByMarkers = readByMarkers == null ? new HashSet<>() : readByMarkers;
+		this.readByMarkers = readByMarkers == null ? new HashSet<ReadByMarker>() : readByMarkers;
 		this.markable = markable;
 	}
 
@@ -483,7 +485,12 @@ public class Message extends AbstractEntity {
 			final boolean matchingCounterpart = this.counterpart.equals(message.getCounterpart());
 			if (message.getRemoteMsgId() != null) {
 				final boolean hasUuid = CryptoHelper.UUID_PATTERN.matcher(message.getRemoteMsgId()).matches();
-				return hasUuid && this.edited != null && matchingCounterpart && this.edited.equals(message.getRemoteMsgId()) || (message.getRemoteMsgId().equals(this.remoteMsgId) || message.getRemoteMsgId().equals(this.uuid)) && matchingCounterpart && (body.equals(otherBody) || (message.getEncryption() == Message.ENCRYPTION_PGP && hasUuid));
+				if (hasUuid && this.edited != null && matchingCounterpart && this.edited.equals(message.getRemoteMsgId())) {
+					return true;
+				}
+				return (message.getRemoteMsgId().equals(this.remoteMsgId) || message.getRemoteMsgId().equals(this.uuid))
+						&& matchingCounterpart
+						&& (body.equals(otherBody) || (message.getEncryption() == Message.ENCRYPTION_PGP && hasUuid));
 			} else {
 				return this.remoteMsgId == null
 						&& matchingCounterpart

@@ -91,7 +91,14 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 		accountListView = findViewById(R.id.account_list);
 		this.mAccountAdapter = new AccountAdapter(this, accountList);
 		accountListView.setAdapter(this.mAccountAdapter);
-		accountListView.setOnItemClickListener((arg0, view, position, arg3) -> switchToAccount(accountList.get(position)));
+		accountListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view,
+									int position, long arg3) {
+				switchToAccount(accountList.get(position));
+			}
+		});
 		registerForContextMenu(accountListView);
 	}
 

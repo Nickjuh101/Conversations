@@ -20,7 +20,7 @@ public class Data extends Element {
 	}
 
 	public List<Field> getFields() {
-		ArrayList<Field> fields = new ArrayList<>();
+		ArrayList<Field> fields = new ArrayList<Field>();
 		for(Element child : getChildren()) {
 			if (child.getName().equals("field")
 					&& !FORM_TYPE.equals(child.getAttribute("var"))) {

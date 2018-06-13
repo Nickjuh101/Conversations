@@ -82,7 +82,7 @@ public class XmppAxolotlSession implements Comparable<XmppAxolotlSession> {
 	public byte[] processReceiving(AxolotlKey encryptedKey) throws CryptoFailedException {
 		byte[] plaintext;
 		FingerprintStatus status = getTrust();
-		if (status.isCompromised()) {
+		if (!status.isCompromised()) {
 			try {
 				if (encryptedKey.prekey) {
 					PreKeySignalMessage preKeySignalMessage = new PreKeySignalMessage(encryptedKey.key);

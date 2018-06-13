@@ -7,6 +7,7 @@ import android.widget.Filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 public class KnownHostsAdapter extends ArrayAdapter<String> {

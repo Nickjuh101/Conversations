@@ -44,8 +44,8 @@ public class PhoneHelper {
 				+ "\")";
 
 		CursorLoader mCursorLoader = new NotThrowCursorLoader(context,
-                PROJECTION, SELECTION
-        );
+				ContactsContract.Data.CONTENT_URI, PROJECTION, SELECTION, null,
+				null);
 		mCursorLoader.registerListener(0, (arg0, c) -> {
 			if (c != null) {
 				while (c.moveToNext()) {
@@ -107,8 +107,8 @@ public class PhoneHelper {
 
 	private static class NotThrowCursorLoader extends CursorLoader {
 
-		private NotThrowCursorLoader(Context c, String[] p, String s) {
-			super(c, ContactsContract.Data.CONTENT_URI, p, s, null, null);
+		private NotThrowCursorLoader(Context c, Uri u, String[] p, String s, String[] sa, String so) {
+			super(c, u, p, s, sa, so);
 		}
 
 		@Override

@@ -689,7 +689,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				imageView.setBackgroundColor(UIHelper.getColorForName(seed == null ? user.getName() : seed));
 				imageView.setImageDrawable(null);
 				final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-				final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), task);
+				final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), null, task);
 				imageView.setImageDrawable(asyncDrawable);
 				try {
 					task.execute(user);
@@ -702,8 +702,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 	static class AsyncDrawable extends BitmapDrawable {
 		private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-		AsyncDrawable(Resources res, BitmapWorkerTask bitmapWorkerTask) {
-			super(res, (Bitmap) null);
+		AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+			super(res, bitmap);
 			bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
 		}
 
