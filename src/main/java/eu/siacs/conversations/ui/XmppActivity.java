@@ -607,18 +607,6 @@ public abstract class XmppActivity extends ActionBarActivity {
 		}
 	}
 
-	protected boolean noAccountUsesPgp() {
-		if (!hasPgp()) {
-			return true;
-		}
-		for (Account account : xmppConnectionService.getAccounts()) {
-			if (account.getPgpId() != 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	@SuppressWarnings("deprecation")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	protected void setListItemBackgroundOnView(View view) {

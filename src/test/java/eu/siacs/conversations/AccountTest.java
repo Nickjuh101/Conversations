@@ -1,6 +1,5 @@
 package eu.siacs.conversations;
 
-import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,6 +13,8 @@ import java.io.IOException;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.pep.Avatar;
+
+import static org.junit.Assert.*;
 
 
 public class AccountTest {

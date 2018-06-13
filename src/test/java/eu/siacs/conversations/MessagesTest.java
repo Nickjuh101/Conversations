@@ -1,9 +1,11 @@
 package eu.siacs.conversations;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
+
+import static org.junit.Assert.*;
 
 
 public class MessagesTest {

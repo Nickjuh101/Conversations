@@ -1,6 +1,7 @@
 package eu.siacs.conversations;
 
 import android.net.Uri;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;

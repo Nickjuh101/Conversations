@@ -447,14 +447,6 @@ public final class MimeUtils {
     private MimeUtils() {
     }
     /**
-     * Returns true if the given MIME type has an entry in the map.
-     * @param mimeType A MIME type (i.e. text/plain)
-     * @return True iff there is a mimeType entry in the map.
-     */
-    public static boolean hasMimeType(String mimeType) {
-        return mimeType != null && !mimeType.isEmpty() && mimeTypeToExtensionMap.containsKey(mimeType);
-    }
-    /**
      * Returns the MIME type for the given extension.
      * @param extension A file extension without the leading '.'
      * @return The MIME type for the given extension or null iff there is none.
@@ -464,14 +456,6 @@ public final class MimeUtils {
             return null;
         }
         return extensionToMimeTypeMap.get(extension.toLowerCase());
-    }
-    /**
-     * Returns true if the given extension has a registered MIME type.
-     * @param extension A file extension without the leading '.'
-     * @return True iff there is an extension entry in the map.
-     */
-    public static boolean hasExtension(String extension) {
-        return extension != null && !extension.isEmpty() && extensionToMimeTypeMap.containsKey(extension);
     }
     /**
      * Returns the registered extension for the given MIME type. Note that some

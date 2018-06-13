@@ -190,10 +190,6 @@ public class ListSelectionManager {
 		SUPPORTED = FIELD_EDITOR != null && METHOD_START_SELECTION != null;
 	}
 
-	public static boolean isSupported() {
-		return SUPPORTED;
-	}
-
 	public static void startSelection(TextView textView, int start, int end) {
 		final CharSequence text = textView.getText();
 		if (SUPPORTED && start >= 0 && end > start && textView.isTextSelectable() && text instanceof Spannable) {

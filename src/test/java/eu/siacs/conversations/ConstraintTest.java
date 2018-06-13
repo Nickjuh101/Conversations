@@ -1,7 +1,5 @@
 package eu.siacs.conversations;
 
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,6 +19,8 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.pep.Avatar;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 

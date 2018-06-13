@@ -36,8 +36,6 @@ import eu.siacs.conversations.Config;
 
 public class MenuDoubleTabUtil {
 
-	private static final int TIMEOUT = 250;
-
 	private static long lastMenuOpenedTimestamp = 0L;
 
 	public static void recordMenuOpen() {

@@ -3,8 +3,6 @@ package eu.siacs.conversations;
 import android.app.Application;
 import android.widget.TextView;
 
-import static eu.siacs.conversations.entities.Message.STATUS_SEND_FAILED;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +19,8 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
 
+import static eu.siacs.conversations.entities.Message.STATUS_SEND_FAILED;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 
