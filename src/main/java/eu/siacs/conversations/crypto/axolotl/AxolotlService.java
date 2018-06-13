@@ -824,28 +824,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 		return conversation.isSingleOrPrivateAndNonAnonymous();
 	}
 
-	public Pair<AxolotlCapability, Jid> isConversationAxolotlCapableDetailed(Conversation conversation) {
-		if (conversation.isSingleOrPrivateAndNonAnonymous()) {
-			final List<Jid> jids = getCryptoTargets(conversation);
-			for (Jid jid : jids) {
-				if (!hasAny(jid) && (!deviceIds.containsKey(jid) || deviceIds.get(jid).isEmpty())) {
-					if (conversation.getAccount().getRoster().getContact(jid).mutualPresenceSubscription()) {
-						return new Pair<>(AxolotlCapability.MISSING_KEYS, jid);
-					} else {
-						return new Pair<>(AxolotlCapability.MISSING_PRESENCE, jid);
-					}
-				}
-			}
-			if (jids.size() > 0) {
-				return new Pair<>(AxolotlCapability.FULL, null);
-			} else {
-				return new Pair<>(AxolotlCapability.NO_MEMBERS, null);
-			}
-		} else {
-			return new Pair<>(AxolotlCapability.WRONG_CONFIGURATION, null);
-		}
-	}
-
 	public List<Jid> getCryptoTargets(Conversation conversation) {
 		final List<Jid> jids;
 		if (conversation.getMode() == Conversation.MODE_SINGLE) {
@@ -859,10 +837,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
 	public FingerprintStatus getFingerprintTrust(String fingerprint) {
 		return axolotlStore.getFingerprintStatus(fingerprint);
-	}
-
-	public X509Certificate getFingerprintCertificate(String fingerprint) {
-		return axolotlStore.getFingerprintCertificate(fingerprint);
 	}
 
 	public void setFingerprintTrust(String fingerprint, FingerprintStatus status) {

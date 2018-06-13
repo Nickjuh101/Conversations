@@ -71,12 +71,6 @@ public class JingleConnectionManager extends AbstractConnectionManager {
 		return connection;
 	}
 
-	public JingleConnection createNewConnection(final JinglePacket packet) {
-		JingleConnection connection = new JingleConnection(this);
-		this.connections.add(connection);
-		return connection;
-	}
-
 	public void finishConnection(JingleConnection connection) {
 		this.connections.remove(connection);
 	}

@@ -379,33 +379,6 @@ public class IqGenerator extends AbstractGenerator {
 		return register;
 	}
 
-	public IqPacket pushTokenToAppServer(Jid appServer, String token, String deviceId) {
-		IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
-		packet.setTo(appServer);
-		Element command = packet.addChild("command", "http://jabber.org/protocol/commands");
-		command.setAttribute("node","register-push-gcm");
-		command.setAttribute("action","execute");
-		Data data = new Data();
-		data.put("token", token);
-		data.put("android-id", deviceId);
-		data.submit();
-		command.addChild(data);
-		return packet;
-	}
-
-	public IqPacket enablePush(Jid jid, String node, String secret) {
-		IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
-		Element enable = packet.addChild("enable","urn:xmpp:push:0");
-		enable.setAttribute("jid",jid.toString());
-		enable.setAttribute("node", node);
-		Data data = new Data();
-		data.setFormType(Namespace.PUBSUB_PUBLISH_OPTIONS);
-		data.put("secret",secret);
-		data.submit();
-		enable.addChild(data);
-		return packet;
-	}
-
 	public IqPacket queryAffiliation(Conversation conversation, String affiliation) {
 		IqPacket packet = new IqPacket(IqPacket.TYPE.GET);
 		packet.setTo(conversation.getJid().asBareJid());

@@ -49,9 +49,6 @@ public abstract class AbstractGenerator {
 	private final String[] PRIVACY_SENSITIVE = {
 			"urn:xmpp:time" //XEP-0202: Entity Time leaks time zone
 	};
-	private final String[] OTR = {
-			"urn:xmpp:otr:0"
-	};
 	private String mVersion = null;
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);

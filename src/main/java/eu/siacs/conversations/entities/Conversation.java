@@ -240,17 +240,6 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 		}
 	}
 
-	public void findUnsentMessagesWithEncryption(int encryptionType, OnMessageFound onMessageFound) {
-		synchronized (this.messages) {
-			for (Message message : this.messages) {
-				if ((message.getStatus() == Message.STATUS_UNSEND || message.getStatus() == Message.STATUS_WAITING)
-						&& (message.getEncryption() == encryptionType)) {
-					onMessageFound.onMessageFound(message);
-				}
-			}
-		}
-	}
-
 	public void findUnsentTextMessages(OnMessageFound onMessageFound) {
 		synchronized (this.messages) {
 			for (Message message : this.messages) {
